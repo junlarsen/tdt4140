@@ -1,0 +1,9 @@
+// Vitest Snapshot v1
+
+exports[`react application > can render an element 1`] = `
+<DocumentFragment>
+  <h1>
+    Hello React root
+  </h1>
+</DocumentFragment>
+`;

@@ -7,6 +7,7 @@
   "scripts": {
     "format": "prettier . --write",
     "test": "npm run test -ws",
+    "build": "npm run build -ws",
     "lint": "eslint . --fix",
     "check": "prettier . --check && eslint . && npm run test -ws"
   },

@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "node src/index.js",
     "test": "vitest run",
-    "migrate": "node src/migrate.js"
+    "migrate": "node src/migrate.js",
+    "build": "npm run migrate"
   },
   "repository": {
     "type": "git",

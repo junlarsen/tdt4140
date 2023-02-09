@@ -1,6 +1,10 @@
 import { expect, describe, it } from "vitest";
 import { UserService } from "../user-service.js";
 import { createMockDatabase } from "../sqlite.js";
+import { promisify } from "util";
+import jwt from "jsonwebtoken";
+
+const sign = promisify(jwt.sign);
 
 describe("user service", async () => {
   // Create mock in-memory database and run transactions on it
@@ -45,5 +49,26 @@ describe("user service", async () => {
     });
     const found = await service.find(user.email);
     expect(found).toStrictEqual(user);
+  });
+
+  it("should log in valid users", async () => {
+    const user = await service.login("foo@example.com", "123");
+    expect(user).toBeDefined();
+    const decoded = await service.decrypt(user);
+    expect(decoded).not.toHaveProperty("password");
+    expect(decoded).toHaveProperty("email", "foo@example.com");
+  });
+
+  it("should not log in missing or wrong passwords", async () => {
+    const fake = await service.login("nobody@nobody.net", "admin");
+    expect(fake).toStrictEqual({ error: "invalid_user" });
+    const wrong = await service.login("foo@example.com", "wrong_password");
+    expect(wrong).toStrictEqual({ error: "invalid_password" });
+  });
+
+  it("should not return value for fake jwts", async () => {
+    const randomJwt = await sign({ a: 123 }, "fake_password");
+    const user = await service.decrypt(randomJwt);
+    expect(user).toBeNull();
   });
 });

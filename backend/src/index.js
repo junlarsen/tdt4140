@@ -10,4 +10,5 @@ const userController = new UserController(userService);
 app.use(express.json());
 app.get("/", (req, res) => res.send("Hello world from Express"));
 app.post("/api/users/", (req, res) => userController.register(req, res));
+app.post("/api/users/login/", (req, res) => userController.login(req, res));
 app.listen(3001);

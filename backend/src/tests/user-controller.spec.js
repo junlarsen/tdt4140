@@ -13,6 +13,7 @@ describe("user controller", async () => {
   const app = express();
   app.use(express.json());
   app.post("/api/users/", controller.register.bind(controller));
+  app.post("/api/users/login/", controller.login.bind(controller));
 
   it("can register new users via the api", async () => {
     const response = await request(app)
@@ -36,5 +37,17 @@ describe("user controller", async () => {
         email: "joe@doe.com",
       });
     expect(response.status).toBe(409);
+  });
+
+  it("will return a valid jwt on authentication", async () => {
+    const response = await request(app)
+      .post("/api/users/login")
+      .set("content-type", "application/json")
+      .send({
+        email: "joe@doe.com",
+        password: "123",
+      });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("jwt");
   });
 });

@@ -1,5 +1,12 @@
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
+import jwt from "jsonwebtoken";
 import { userSchema } from "./user.js";
+import { promisify } from "util";
+
+const sign = promisify(jwt.sign);
+const verify = promisify(jwt.verify);
+
+const JWT_PASSWORD = "secret";
 
 export class UserService {
   #database;
@@ -18,6 +25,32 @@ export class UserService {
       },
     );
     return userSchema.parse(user);
+  }
+
+  async login(email, password) {
+    const user = await this.find(email);
+    if (user === null) {
+      return { error: "invalid_user" };
+    }
+    const isValid = await compare(password, user.password);
+    if (!isValid) {
+      return { error: "invalid_password" };
+    }
+    return await sign(
+      {
+        ...user,
+        password: undefined,
+      },
+      JWT_PASSWORD,
+    );
+  }
+
+  async decrypt(jwt) {
+    try {
+      return await verify(jwt, JWT_PASSWORD);
+    } catch (err) {
+      return null;
+    }
   }
 
   async find(email) {

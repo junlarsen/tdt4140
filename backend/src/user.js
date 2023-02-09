@@ -12,3 +12,9 @@ export const createUserSchema = userSchema.omit({
   id: true,
   user_role: true,
 });
+
+export const loginUserSchema = userSchema.omit({
+  id: true,
+  username: true,
+  user_role: true,
+});

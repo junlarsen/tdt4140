@@ -36,13 +36,16 @@ export class UserService {
     if (!isValid) {
       return { error: "invalid_password" };
     }
-    return await sign(
-      {
-        ...user,
-        password: undefined,
-      },
-      JWT_PASSWORD,
-    );
+    return {
+      jwt: await sign(
+        {
+          ...user,
+          password: undefined,
+        },
+        JWT_PASSWORD,
+      ),
+      user,
+    };
   }
 
   async decrypt(jwt) {

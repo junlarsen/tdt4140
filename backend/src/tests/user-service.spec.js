@@ -54,7 +54,7 @@ describe("user service", async () => {
   it("should log in valid users", async () => {
     const user = await service.login("foo@example.com", "123");
     expect(user).toBeDefined();
-    const decoded = await service.decrypt(user);
+    const decoded = await service.decrypt(user.jwt);
     expect(decoded).not.toHaveProperty("password");
     expect(decoded).toHaveProperty("email", "foo@example.com");
   });

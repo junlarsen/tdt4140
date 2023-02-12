@@ -49,5 +49,7 @@ describe("user controller", async () => {
       });
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("jwt");
+    expect(response.body).toHaveProperty("user");
+    expect(response.body.user).not.toHaveProperty("password");
   });
 });

@@ -1,1 +1,1 @@
-export { userSchema, createUserSchema, loginUserSchema } from "./user.js";
+export { userDtoSchema, createUserSchema, loginUserSchema } from "./user.js";

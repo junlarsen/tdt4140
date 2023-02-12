@@ -8,6 +8,10 @@ export const userSchema = z.object({
   user_role: z.enum(["u", "a"]),
 });
 
+export const userDtoSchema = userSchema.omit({
+  password: true,
+});
+
 export const createUserSchema = userSchema.omit({
   id: true,
   user_role: true,

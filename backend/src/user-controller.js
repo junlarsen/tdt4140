@@ -1,4 +1,4 @@
-import { createUserSchema, loginUserSchema } from "./user.js";
+import { createUserSchema, loginUserSchema, userDtoSchema } from "./user.js";
 
 export class UserController {
   #userService;
@@ -10,11 +10,12 @@ export class UserController {
   async login(req, res) {
     const form = loginUserSchema.parse(req.body);
     const login = await this.#userService.login(form.email, form.password);
-    if (typeof login === "object") {
+    if (typeof login === "object" && "error" in login) {
       return res.status(401, login).json(login);
     }
     return res.status(200).json({
-      jwt: login,
+      jwt: login.jwt,
+      user: userDtoSchema.parse(login.user),
     });
   }
 

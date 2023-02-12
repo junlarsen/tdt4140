@@ -11,11 +11,15 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { Registration } from "./pages/registration.jsx";
 import { Layout } from "./pages/layout";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Login } from "./pages/login";
+import { Home } from "./pages/home";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
+      <Route index element={<Home />} />
       <Route path="/registration" element={<Registration />} />
+      <Route path="/login" element={<Login />} />
     </Route>,
   ),
 );

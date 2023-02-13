@@ -42,12 +42,12 @@ export const Login = () => {
 
   useEffect(() => {
     if (isError) {
-      const isExistingUserError = error.response.status === 401;
+      const isWrongPasswordError = error.response.status === 401;
       showNotification({
-        title: "Error",
-        message: isExistingUserError
-          ? "The password and email combination was wrong"
-          : `Unknown error: ${error.message}`,
+        title: "Feil oppsto",
+        message: isWrongPasswordError
+          ? "E-post addressen eller passordet var feil"
+          : `En ukjent feil oppsto: ${error.message}`,
         color: "red",
       });
     }
@@ -56,24 +56,26 @@ export const Login = () => {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <Flex justify="center" align="center" direction="column" gap="md">
-        <Title order={1}>Login</Title>
-        <Text>Enter your email and password to log in to the site.</Text>
+        <Title order={1}>Logg inn</Title>
+        <Text>
+          Vennligst logg inn ved å skrive inn e-post addressen og passordet
+          ditt.
+        </Text>
         <TextInput
           {...register("email")}
-          placeholder="email"
+          placeholder="e-post addresse"
           type="email"
           error={errors.email && <ErrorMessage errors={errors} name="email" />}
         />
         <TextInput
           {...register("password")}
-          placeholder="password"
+          placeholder="passord"
+          type="password"
           error={
             errors.password && <ErrorMessage errors={errors} name="password" />
           }
         />
-        <Button color="indigo" type="submit">
-          Sign in
-        </Button>
+        <Button type="submit">Logg inn</Button>
       </Flex>
     </form>
   );

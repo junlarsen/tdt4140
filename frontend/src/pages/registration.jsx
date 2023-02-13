@@ -24,9 +24,9 @@ export const Registration = () => {
   useEffect(() => {
     if (isSuccess) {
       showNotification({
-        title: "Account registered",
+        title: "Bruker registrert",
         message:
-          "Your account has been registered. You will shortly be redirected",
+          "Brukeren din har blitt registrert. Du vil nå bli videresendt til siden hvor du kan logge inn.",
         color: "blue",
       });
       navigate("/login");
@@ -37,10 +37,10 @@ export const Registration = () => {
     if (isError) {
       const isExistingUserError = error.response.status === 409;
       showNotification({
-        title: "Error",
+        title: "Feil oppsto",
         message: isExistingUserError
-          ? "A user with that email already exists"
-          : `Unknown error: ${error.message}`,
+          ? "En bruker med den oppgitte e-post addressen eksisterer allerede"
+          : `En ukjent feil oppsto: ${error.message}`,
         color: "red",
       });
     }
@@ -49,33 +49,33 @@ export const Registration = () => {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <Flex justify="center" align="center" direction="column" gap="md">
-        <Title order={1}>Register an account</Title>
+        <Title order={1}>Registrer bruker</Title>
         <Text>
-          Please create an account to be able to leave reviews on IBDB.
+          Opprett en bruker for å kunne legge igjen anmeldelser og lage
+          personlige lister på IBDB
         </Text>
         <TextInput
           {...register("username")}
-          placeholder="username"
+          placeholder="navn"
           error={
             errors.username && <ErrorMessage errors={errors} name="username" />
           }
         />
         <TextInput
           {...register("email")}
-          placeholder="email"
+          placeholder="e-post addresse"
           type="email"
           error={errors.email && <ErrorMessage errors={errors} name="email" />}
         />
         <TextInput
           {...register("password")}
-          placeholder="password"
+          placeholder="passord"
+          type="password"
           error={
             errors.password && <ErrorMessage errors={errors} name="password" />
           }
         />
-        <Button color="indigo" type="submit">
-          Register account
-        </Button>
+        <Button type="submit">Registrer bruker</Button>
       </Flex>
     </form>
   );

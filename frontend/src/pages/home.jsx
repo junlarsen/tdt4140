@@ -3,7 +3,6 @@ import { Button } from "@mantine/core";
 
 export const Home = () => {
   const session = useSession();
-  const logout = useLogout();
 
   return (
     <div>
@@ -11,7 +10,6 @@ export const Home = () => {
       {session
         ? `Welcome user ${JSON.stringify(session.user)}`
         : "Not logged in"}
-      <Button onClick={() => logout()}>Log out</Button>
     </div>
   );
 };

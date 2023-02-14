@@ -18,21 +18,21 @@ export async function createMockDatabase() {
     filename: ":memory:",
     driver: sqlite.Database,
   });
-  await migrate(database);
+  await migrate(database, false);
   return database;
 }
 
-export async function migrate(database) {
+export async function migrate(database, log = true) {
   const files = await fs.readdir("./migrations");
   for (const file of files) {
     const filePath = path.resolve("./migrations", file);
     const stats = await fs.stat(filePath);
     if (stats.isFile() && file.endsWith(".sql")) {
       const contents = await fs.readFile(filePath, "utf-8");
-      console.log(`Performing migration ${file}`);
-      await database.run(contents, () => {
-        console.log(`Executed SQL:\n${contents}\n`);
-      });
+      if (log) {
+        console.log(`Performing migration ${file}`);
+      }
+      await database.run(contents);
     }
   }
 }

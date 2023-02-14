@@ -43,6 +43,9 @@ export class UserService {
           password: undefined,
         },
         JWT_PASSWORD,
+        {
+          expiresIn: "1h",
+        },
       ),
       user,
     };

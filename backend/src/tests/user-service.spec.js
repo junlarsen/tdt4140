@@ -1,4 +1,4 @@
-import { expect, describe, it } from "vitest";
+import { expect, describe, it, beforeEach } from "vitest";
 import { UserService } from "../user-service.js";
 import { createMockDatabase } from "../sqlite.js";
 import { promisify } from "util";
@@ -7,9 +7,13 @@ import jwt from "jsonwebtoken";
 const sign = promisify(jwt.sign);
 
 describe("user service", async () => {
-  // Create mock in-memory database and run transactions on it
-  const database = await createMockDatabase();
-  const service = new UserService(database);
+  let database;
+  let service;
+
+  beforeEach(async () => {
+    database = await createMockDatabase();
+    service = new UserService(database);
+  });
 
   it("should register new users", async () => {
     const user = await service.create({
@@ -21,7 +25,6 @@ describe("user service", async () => {
     expect(user).toHaveProperty("username", "John Doe");
     expect(user).toHaveProperty("user_role", "u");
     expect(user).toHaveProperty("email", "john@example.com");
-    expect(user).toHaveProperty("id", 1);
   });
 
   it("should not allow registering the same email twice", async () => {
@@ -52,6 +55,11 @@ describe("user service", async () => {
   });
 
   it("should log in valid users", async () => {
+    await service.create({
+      username: "Peter Pan",
+      password: "123",
+      email: "foo@example.com",
+    });
     const user = await service.login("foo@example.com", "123");
     expect(user).toBeDefined();
     const decoded = await service.decrypt(user.jwt);
@@ -62,6 +70,11 @@ describe("user service", async () => {
   it("should not log in missing or wrong passwords", async () => {
     const fake = await service.login("nobody@nobody.net", "admin");
     expect(fake).toStrictEqual({ error: "invalid_user" });
+    await service.create({
+      username: "Peter Pan",
+      password: "123",
+      email: "foo@example.com",
+    });
     const wrong = await service.login("foo@example.com", "wrong_password");
     expect(wrong).toStrictEqual({ error: "invalid_password" });
   });

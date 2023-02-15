@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Login } from "./pages/login";
 import { Home } from "./pages/home";
 import { AdminGenres } from "./pages/admin/genres";
+import { AdminAuthors } from "./pages/admin/authors.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="admin" element={<Outlet />}>
         <Route path="genres" element={<AdminGenres />} />
+        <Route path="authors" element={<AdminAuthors />} />
       </Route>
     </Route>,
   ),

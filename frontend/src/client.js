@@ -4,6 +4,7 @@ import {
   createUserSchema,
   loginUserSchema,
   createGenreSchema,
+  createAuthorSchema,
 } from "@gruppe-20/backend";
 import { useSession } from "./auth.js";
 
@@ -72,6 +73,41 @@ export const useCreateGenreMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["genres"]);
+    },
+  });
+};
+
+export const useListAuthorsQuery = () =>
+  useQuery({
+    queryKey: ["authors"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/authors/`,
+        method: "GET",
+      });
+      return response.data;
+    },
+  });
+
+export const useCreateAuthorMutation = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  return useMutation({
+    mutationFn: async (data) => {
+      createAuthorSchema.parse(data);
+      const response = await axios({
+        url: `${baseUrl}/api/authors/`,
+        method: "POST",
+        data,
+        headers: {
+          "content-type": "application/json",
+          authorization: `Token ${session?.authToken}`,
+        },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["authors"]);
     },
   });
 };

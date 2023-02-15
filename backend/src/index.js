@@ -44,7 +44,7 @@ app.post("/api/genres/", auth, adminOnly, (req, res) =>
 );
 
 // AuthorController
-app.get("/api/authors/", auth, (req, res) => authorController.list(req, res));
+app.get("/api/authors/", (req, res) => authorController.list(req, res));
 app.post("/api/authors", auth, adminOnly, (req, res) =>
   authorController.create(req, res),
 );

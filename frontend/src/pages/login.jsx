@@ -32,10 +32,9 @@ export const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(data.data);
-      userDtoSchema.parse(data.data.user);
-      setAuthToken(data.data.jwt);
-      setSession(JSON.stringify(data.data.user));
+      userDtoSchema.parse(data.user);
+      setAuthToken(data.jwt);
+      setSession(JSON.stringify(data.user));
       navigate("/");
     }
   }, [isSuccess, data, showNotification]);

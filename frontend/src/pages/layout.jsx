@@ -58,6 +58,7 @@ const Logo = () => {
 const Links = () => {
   const theme = useMantineTheme();
   const session = useSession();
+  const navigate = useNavigate();
   const links = [
     {
       icon: "mdi:format-list-numbered",
@@ -123,6 +124,7 @@ const Links = () => {
       {links.map((link) => (
         <UnstyledButton
           key={link.href}
+          onClick={() => navigate(link.href)}
           sx={(theme) => ({
             display: "block",
             width: "100%",

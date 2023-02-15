@@ -24,7 +24,7 @@ describe("book service", () => {
     author1 = await authorService.create({ name: "John Doe" });
     author2 = await authorService.create({ name: "Peter Pan" });
     genre1 = await genreService.create({ name: "Romance" });
-    genre2 = await genreService.create({ name: "Horror" });
+    genre2 = await genreService.create({ name: "Outer Space" });
   });
 
   it("can create new books", async () => {

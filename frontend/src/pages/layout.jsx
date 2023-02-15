@@ -152,6 +152,10 @@ const User = () => {
   const theme = useMantineTheme();
   const session = useSession();
   const logout = useLogout();
+  const onLogoutClick = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <Box
@@ -176,7 +180,7 @@ const User = () => {
                 </Text>
               </Box>
             </Flex>
-            <Button onClick={() => logout()}>Logg ut</Button>
+            <Button onClick={() => onLogoutClick()}>Logg ut</Button>
           </>
         ) : (
           <>

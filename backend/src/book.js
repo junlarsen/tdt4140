@@ -4,7 +4,7 @@ import { genreSchema } from "./genre.js";
 
 export const bookSchema = z.object({
   id: z.number(),
-  title: z.string(),
+  title: z.string().min(1),
   release_year: z.number(),
   description: z.string().nullable(),
   image: z.string().nullable(),

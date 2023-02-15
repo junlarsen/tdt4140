@@ -13,6 +13,7 @@ import { Layout } from "./pages/layout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Login } from "./pages/login";
 import { Home } from "./pages/home";
+import { AdminGenres } from "./pages/admin/genres";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,9 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/registration" element={<Registration />} />
       <Route path="/login" element={<Login />} />
+      <Route path="admin" element={<Outlet />}>
+        <Route path="genres" element={<AdminGenres />} />
+      </Route>
     </Route>,
   ),
 );

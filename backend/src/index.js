@@ -38,7 +38,7 @@ app.post("/api/users/", (req, res) => userController.register(req, res));
 app.post("/api/users/login/", (req, res) => userController.login(req, res));
 
 // GenreController
-app.get("/api/genres/", auth, (req, res) => genreController.list(req, res));
+app.get("/api/genres/", (req, res) => genreController.list(req, res));
 app.post("/api/genres/", auth, adminOnly, (req, res) =>
   genreController.create(req, res),
 );

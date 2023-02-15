@@ -1,14 +1,19 @@
-import { useMutation } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-import { createUserSchema, loginUserSchema } from "@gruppe-20/backend";
+import {
+  createUserSchema,
+  loginUserSchema,
+  createGenreSchema,
+} from "@gruppe-20/backend";
+import { useSession } from "./auth.js";
 
 const baseUrl = "http://localhost:3001";
 
 export const useRegistrationMutation = () =>
   useMutation({
-    mutationFn: (data) => {
+    mutationFn: async (data) => {
       createUserSchema.parse(data);
-      return axios({
+      const response = await axios({
         url: `${baseUrl}/api/users/`,
         method: "POST",
         data,
@@ -16,14 +21,15 @@ export const useRegistrationMutation = () =>
           "content-type": "application/json",
         },
       });
+      return response.data;
     },
   });
 
 export const useLoginMutation = () =>
   useMutation({
-    mutationFn: (data) => {
+    mutationFn: async (data) => {
       loginUserSchema.parse(data);
-      return axios({
+      const response = await axios({
         url: `${baseUrl}/api/users/login/`,
         method: "POST",
         data,
@@ -31,5 +37,41 @@ export const useLoginMutation = () =>
           "content-type": "application/json",
         },
       });
+      return response.data;
     },
   });
+
+export const useListGenresQuery = () =>
+  useQuery({
+    queryKey: ["genres"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/genres/`,
+        method: "GET",
+      });
+      return response.data;
+    },
+  });
+
+export const useCreateGenreMutation = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  return useMutation({
+    mutationFn: async (data) => {
+      createGenreSchema.parse(data);
+      const response = await axios({
+        url: `${baseUrl}/api/genres/`,
+        method: "POST",
+        data,
+        headers: {
+          "content-type": "application/json",
+          authorization: `Token ${session?.authToken}`,
+        },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["genres"]);
+    },
+  });
+};

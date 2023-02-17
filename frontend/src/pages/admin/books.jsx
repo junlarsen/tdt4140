@@ -66,7 +66,7 @@ const AdminBooksPopup = ({ onClose }) => {
 
   const { isSuccess, isError, error, mutate } = useCreateBookMutation();
   const onFormSubmit = (data) => {
-    console.log(data);
+    onClose();
     mutate(data);
   };
 

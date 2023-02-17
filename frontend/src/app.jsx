@@ -15,7 +15,7 @@ import { Login } from "./pages/login";
 import { Home } from "./pages/home";
 import { AdminGenres } from "./pages/admin/genres";
 import { AdminAuthors } from "./pages/admin/authors.jsx";
-import { CreateBook } from "./pages/admin/createBook.jsx";
+import { AdminBooks } from "./pages/admin/books.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,7 +26,7 @@ const router = createBrowserRouter(
       <Route path="admin" element={<Outlet />}>
         <Route path="genres" element={<AdminGenres />} />
         <Route path="authors" element={<AdminAuthors />} />
-        <Route path="createBook" element={<CreateBook />} />
+        <Route path="books" element={<AdminBooks />} />
       </Route>
     </Route>,
   ),

@@ -24,6 +24,7 @@ export class BookController {
       });
       return res.status(201).json(book);
     } catch (err) {
+      console.log(err);
       return res.sendStatus(500);
     }
   }

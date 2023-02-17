@@ -5,6 +5,7 @@ import {
   loginUserSchema,
   createGenreSchema,
   createAuthorSchema,
+  createBookSchema,
 } from "@gruppe-20/backend";
 import { useSession } from "./auth.js";
 
@@ -108,6 +109,29 @@ export const useCreateAuthorMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["authors"]);
+    },
+  });
+};
+
+export const useCreateBookMutation = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  return useMutation({
+    mutationFn: async (data) => {
+      createBookSchema.parse(data);
+      const response = await axios({
+        url: `${baseUrl}/api/books/`,
+        method: "POST",
+        data,
+        headers: {
+          "content-type": "application/json",
+          authorization: `Token ${session?.authToken}`,
+        },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["books"]);
     },
   });
 };

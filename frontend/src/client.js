@@ -5,6 +5,7 @@ import {
   loginUserSchema,
   createGenreSchema,
   createAuthorSchema,
+  createBookSchema,
 } from "@gruppe-20/backend";
 import { useSession } from "./auth.js";
 
@@ -54,6 +55,20 @@ export const useListGenresQuery = () =>
     },
   });
 
+export const useListGenresNameOnlyQuery = () =>
+  useQuery({
+    queryKey: ["genres"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/genres/`,
+        method: "GET",
+      });
+      const data = response.data;
+      const names = data.map((genre) => genre.name);
+      return names;
+    },
+  });
+
 export const useCreateGenreMutation = () => {
   const queryClient = useQueryClient();
   const session = useSession();
@@ -89,6 +104,20 @@ export const useListAuthorsQuery = () =>
     },
   });
 
+export const useListAuthorsOnlyNameQuery = () =>
+  useQuery({
+    queryKey: ["authors"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/authors/`,
+        method: "GET",
+      });
+      const data = response.data;
+      const names = data.map((author) => author.name);
+      return names;
+    },
+  });
+
 export const useCreateAuthorMutation = () => {
   const queryClient = useQueryClient();
   const session = useSession();
@@ -108,6 +137,26 @@ export const useCreateAuthorMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["authors"]);
+    },
+  });
+};
+
+export const useCreateBookMutation = () => {
+  const session = useSession();
+  return useMutation({
+    mutationFn: async (data) => {
+      createBookSchema.parse(data);
+      const response = await axios({
+        url: `${baseUrl}/api/books/`,
+        method: "POST",
+        data,
+        headers: {
+          "content-type": "application/json",
+          authorization: `Token ${session?.authToken}`,
+        },
+      });
+      console.log(data);
+      return response.data;
     },
   });
 };

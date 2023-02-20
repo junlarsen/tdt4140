@@ -113,6 +113,18 @@ export const useCreateAuthorMutation = () => {
   });
 };
 
+export const useListBooksQuery = () =>
+  useQuery({
+    queryKey: ["books"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/books/`,
+        method: "GET",
+      });
+      return response.data;
+    },
+  });
+
 export const useCreateBookMutation = () => {
   const queryClient = useQueryClient();
   const session = useSession();

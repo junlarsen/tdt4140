@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { showNotification } from "@mantine/notifications";
-import { useCreateBookMutation } from "../../client.js";
+import { useCreateBookMutation, useListBooksQuery } from "../../client.js";
 import { createBookSchema } from "@gruppe-20/backend";
 import {
   Flex,
@@ -14,12 +14,65 @@ import {
   Input,
   Loader,
   Modal,
+  Table,
 } from "@mantine/core";
 import { ErrorMessage } from "@hookform/error-message";
 import { useListGenresQuery, useListAuthorsQuery } from "../../client.js";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+const columnHelper = createColumnHelper();
+const columns = [
+  columnHelper.accessor("id", {
+    header: () => <Text>Id</Text>,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("title", {
+    header: () => <Text>Tittel</Text>,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("release_year", {
+    header: () => <Text>Utgivelsesår</Text>,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("authors", {
+    header: () => <Text>Forfattere</Text>,
+    cell: (info) =>
+      info
+        .getValue()
+        .map((x) => x.name)
+        .join(", "),
+  }),
+  columnHelper.accessor("genres", {
+    header: () => <Text>Sjangere</Text>,
+    cell: (info) =>
+      info
+        .getValue()
+        .map((x) => x.name)
+        .join(", "),
+  }),
+  columnHelper.accessor("description", {
+    header: () => <Text>Beskrivelse</Text>,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("image", {
+    header: () => <Text>Bilde URL</Text>,
+    cell: (info) => info.getValue(),
+  }),
+];
 
 export const AdminBooks = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const { data = [], isLoading } = useListBooksQuery();
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <Flex direction="column" rowGap="md">
@@ -31,6 +84,38 @@ export const AdminBooks = () => {
       <Button onClick={() => setPopupVisible(true)}>Opprett ny</Button>
       {isPopupVisible && (
         <AdminBooksPopup onClose={() => setPopupVisible(false)} />
+      )}
+
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       )}
     </Flex>
   );

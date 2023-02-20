@@ -9,28 +9,35 @@ export class ReviewService {
         this.#database = database;
     }
 
-    async getBooks(id) {
-        const books = await this.#database.all(
-            `SELECT books.title, books.id FROM books
-            INNER JOIN reviews ON books.id = reviews.book_id
-            WHERE reviews.user_id = $id`,
-            {
-                $id: id,
-            },
-        )
-        return books.map(bookSchema.parse);
+    async find(userid, bookid) {
+        const review = await this.#database.get(
+          `SELECT * FROM reviews WHERE reviews.user_id = $userid AND reviews.book_id = $bookid`,
+          {
+            $userid: userid,
+            $bookid: bookid,
+          },
+        );
+        return reviewSchema.parse({
+          ...review
+        });
+    
+    
     }
 
-    async getUsers(id) {
-        const users = await this.#database.all(
-            `SELECT users.title, users.id FROM users
-            INNER JOIN reviews ON users.id = reviews.users_id
-            WHERE reviews.books_id = $id`,
+    async list() {
+    }
+
+    async create({userid, bookid, rating, comment}) {
+        const review = await this.#database.get(
+            "INSERT INTO reviews (user_id, book_id, rating, comment) VALUES ($userid, $bookid, $rating, $comment) RETURNING *",
             {
-                $id: id,
+              $userid: userid,
+              $bookid: bookid,
+              $rating: rating,
+              $comment: comment,
             },
-        )
-        return users.map(userSchema.parse)
+        );
+        return this.find(userid, bookid);
     }
 
 }

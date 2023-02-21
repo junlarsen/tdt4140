@@ -18,13 +18,13 @@ const userService = new UserService(database);
 const genreService = new GenreService(database);
 const authorService = new AuthorService(database);
 const bookService = new BookService(database, authorService, genreService);
-const reviewService = new ReviewService(database)
+const reviewService = new ReviewService(database);
 
 const userController = new UserController(userService);
 const genreController = new GenreController(genreService);
 const authorController = new AuthorController(authorService);
 const bookController = new BookController(bookService);
-const reviewController = new ReviewController(reviewService)
+const reviewController = new ReviewController(reviewService);
 
 const auth = withAuth(userService);
 
@@ -60,7 +60,9 @@ app.post("/api/books/", auth, adminOnly, (req, res) =>
 app.get("/api/books/", (req, res) => bookController.list(req, res));
 
 //ReviewController
-app.post("/api/reviews", auth, (req, res) => reviewController.create(req, res));
-
+app.get("/api/reviews/", (req, res) => reviewController.list(req, res));
+app.post("/api/reviews/", auth, (req, res) =>
+  reviewController.create(req, res),
+);
 
 app.listen(3001);

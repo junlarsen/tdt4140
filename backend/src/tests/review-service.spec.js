@@ -24,6 +24,20 @@ describe("review service", () => {
             book_id: 1,
             rating: 8,
             comment: "This book was a nice read",
-        });
+        }); 
     });
+
+    it("can list reviews", async () => {
+        const empty = await reviewService.list();
+        expect(empty).toHaveLength(0);
+        await reviewService.create({
+          userid: 1,
+          bookid: 1,
+          rating: 8,
+          comment: "This book was a nice read",
+        });
+        const one_review = await reviewService.list();
+        expect(one_review).toHaveLength(1);
+    });
+
 })

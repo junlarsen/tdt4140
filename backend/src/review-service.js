@@ -24,10 +24,12 @@ export class ReviewService {
     
     }
 
-    async list() {
+  async list() {
+    const foreignKeys = await this.#database.all(`SELECT user_id, book_id FROM reviews`);
+    return await Promise.all(foreignKeys.map((x) => this.find(x.user_id, x.book_id)));
     }
 
-    async create({userid, bookid, rating, comment}) {
+  async create({ userid, bookid, rating, comment }) {
         const review = await this.#database.get(
             "INSERT INTO reviews (user_id, book_id, rating, comment) VALUES ($userid, $bookid, $rating, $comment) RETURNING *",
             {
@@ -37,6 +39,7 @@ export class ReviewService {
               $comment: comment,
             },
         );
+      
         return this.find(userid, bookid);
     }
 

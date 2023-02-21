@@ -6,8 +6,3 @@ export const reviewSchema = z.object({
     rating: z.number(),
     comment: z.string().nullable()
 });
-
-export const createReviewSchema = reviewSchema.omit({
-    user_id: true, 
-    book_id: true
-});

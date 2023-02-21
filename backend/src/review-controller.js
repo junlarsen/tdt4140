@@ -1,4 +1,4 @@
-import { createReviewSchema } from "./review.js";
+import { reviewSchema } from "./review.js";
 
 export class ReviewController{
     #reviewService;
@@ -7,24 +7,25 @@ export class ReviewController{
       this.#reviewService = reviewService;
     }
   
-    // async list(req, res) {
-    //   const reviews = await this.#reviewService.list();
-    //   res.json(reviews);
-    // }
+     async list(req, res) {
+       const reviews = await this.#reviewService.list();
+       res.json(reviews);
+    }
   
     async create(req, res) {
-      const form = createReviewSchema.safeParse(req.body);
+      const form = reviewSchema.safeParse(req.body);
       if (!form.success) {
         return res.sendStatus(400);
       }
       try {
         const review = await this.#reviewService.create({
           ...form.data,
-          comment: form.data.comment,
-          rating: form.rating,
+          userid: form.data.user_id,
+          bookid: form.data.book_id,
         });
         return res.status(201).json(review);
       } catch (err) {
+        console.log(err)
         return res.sendStatus(500);
       }
     }

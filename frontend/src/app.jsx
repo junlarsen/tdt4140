@@ -16,6 +16,7 @@ import { Home } from "./pages/home";
 import { AdminGenres } from "./pages/admin/genres";
 import { AdminAuthors } from "./pages/admin/authors.jsx";
 import { AdminBooks } from "./pages/admin/books.jsx";
+import { Search } from "./pages/search.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/registration" element={<Registration />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/search" element={<Search />} />
       <Route path="admin" element={<Outlet />}>
         <Route path="genres" element={<AdminGenres />} />
         <Route path="authors" element={<AdminAuthors />} />

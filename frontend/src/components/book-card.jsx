@@ -1,4 +1,4 @@
-import { Card, Image, Group, Text, Badge, Button } from "@mantine/core";
+import { Card, Image, Group, Text, Badge, Button, Rating } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
 export const BookCard = ({ book }) => {
@@ -18,6 +18,7 @@ export const BookCard = ({ book }) => {
       </Card.Section>
       <Group position="apart" mt="md" mb="xs">
         <Text weight={500}>{book.title}</Text>
+        <Rating defaultValue={book.averageRating ?? 0} fractions={2} readOnly />
         <Badge color="pink" variant="light">
           {book.release_year}
         </Badge>
@@ -45,7 +46,7 @@ export const BookCard = ({ book }) => {
         radius="md"
         onClick={() => navigate(`/books/${book.id}`)}
       >
-        Se anmeldelser
+        Se anmeldelser ({book.ratingCount})
       </Button>
     </Card>
   );

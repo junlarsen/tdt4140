@@ -63,6 +63,8 @@ describe("book controller", () => {
       image: null,
       authors: [{ id: 1, name: "Horror" }],
       genres: [{ id: 1, name: "J.K. Rowling" }],
+      averageRating: null,
+      ratingCount: 0,
     });
   });
 

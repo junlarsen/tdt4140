@@ -73,12 +73,16 @@ export const Book = () => {
                 {book.authors.map((author) => author.name).join(", ")}.
               </Text>
               <Text>
-                {reviews.length === 0 ? (
+                {book.averageRating === null ? (
                   "Ingen av våre brukere har anmeldt denne boka enda."
                 ) : (
                   <>
                     Våre brukere har gitt en gjennomsnittlig anmeldelse på{" "}
-                    <Rating defaultValue={4} readOnly />
+                    <Rating
+                      defaultValue={book.averageRating}
+                      fractions={2}
+                      readOnly
+                    />
                   </>
                 )}
               </Text>

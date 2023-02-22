@@ -13,6 +13,19 @@ export class BookService {
     this.#genreService = genreService;
   }
 
+  async getAverageRating(id) {
+    const rating = await this.#database.get(
+      `SELECT AVG(reviews.rating), COUNT(*) FROM reviews WHERE book_id = $bookId`,
+      {
+        $bookId: id,
+      },
+    );
+    return {
+      average: rating["AVG(reviews.rating)"],
+      count: rating["COUNT(*)"],
+    };
+  }
+
   async getAuthors(id) {
     const authors = await this.#database.all(
       `SELECT authors.name, authors.id FROM authors
@@ -71,11 +84,16 @@ export class BookService {
         $id: id,
       },
     );
-    return bookSchema.parse({
+
+    const ratingStatistics = await this.getAverageRating(book.id);
+    const fullBook = {
       ...book,
       genres: await this.getGenres(book.id),
       authors: await this.getAuthors(book.id),
-    });
+      averageRating: ratingStatistics.average,
+      ratingCount: ratingStatistics.count,
+    };
+    return bookSchema.parse(fullBook);
   }
 
   async create({ title, releaseYear, description, image, genres, authors }) {

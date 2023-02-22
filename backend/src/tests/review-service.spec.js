@@ -49,6 +49,10 @@ describe("review service", () => {
       rating: 4,
       comment: "This book was a nice read",
     });
+    // The book should now have a new average rating
+    const updatedBook = await bookService.find(book.id);
+    expect(updatedBook).toHaveProperty("averageRating", 4);
+    expect(updatedBook).toHaveProperty("ratingCount", 1);
   });
 
   it("can list reviews", async () => {

@@ -10,6 +10,8 @@ export const bookSchema = z.object({
   image: z.string().nullable(),
   authors: z.array(authorSchema).min(1),
   genres: z.array(genreSchema).min(1),
+  averageRating: z.number().min(0).max(5).nullable(),
+  ratingCount: z.number(),
 });
 
 export const createBookSchema = bookSchema
@@ -17,6 +19,8 @@ export const createBookSchema = bookSchema
     id: true,
     authors: true,
     genres: true,
+    averageRating: true,
+    ratingCount: true,
   })
   .extend({
     authors: z.number().array().min(1),

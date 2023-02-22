@@ -44,6 +44,8 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1],
       authors: [author1, author2],
+      averageRating: null,
+      ratingCount: 0,
     });
   });
 

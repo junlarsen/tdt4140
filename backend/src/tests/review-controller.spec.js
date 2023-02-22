@@ -66,6 +66,7 @@ describe("review contoller", () => {
       user_id: user.id,
       book_id: 1,
       rating: 4,
+      username: user.username,
       comment: "This book was a clean read",
     });
   });

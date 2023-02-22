@@ -197,13 +197,8 @@ const BookReviewTable = ({ reviews }) => {
   const session = useSession();
   const columnHelper = createColumnHelper();
   const columns = [
-    columnHelper.accessor("user_id", {
+    columnHelper.accessor("username", {
       header: () => <Text>Brukernavn</Text>,
-      cell: (info) => (
-        <Text>
-          {info.getValue()} {info.getValue() === session?.user?.id && "(Deg)"}
-        </Text>
-      ),
     }),
     columnHelper.accessor("comment", {
       header: () => <Text>Kommentar</Text>,

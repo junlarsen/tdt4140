@@ -48,6 +48,7 @@ describe("review service", () => {
       book_id: book.id,
       rating: 4,
       comment: "This book was a nice read",
+      username: user.username,
     });
     // The book should now have a new average rating
     const updatedBook = await bookService.find(book.id);

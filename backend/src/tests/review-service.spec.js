@@ -40,13 +40,13 @@ describe("review service", () => {
     const review = await reviewService.create({
       userId: user.id,
       bookId: book.id,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
     });
     expect(review).toStrictEqual({
       user_id: user.id,
       book_id: book.id,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
     });
   });
@@ -57,7 +57,7 @@ describe("review service", () => {
     await reviewService.create({
       userId: 1,
       bookId: 1,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
     });
     const one_review = await reviewService.list();
@@ -68,14 +68,14 @@ describe("review service", () => {
     await reviewService.create({
       userId: 1,
       bookId: 1,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
     });
     await expect(() => {
       return reviewService.create({
         userId: 1,
         bookId: 1,
-        rating: 8,
+        rating: 4,
         comment: "This book was a nice read",
       });
     }).rejects.toThrowError();

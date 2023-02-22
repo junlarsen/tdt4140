@@ -6,6 +6,7 @@ import {
   createGenreSchema,
   createAuthorSchema,
   createBookSchema,
+  createReviewSchema,
 } from "@gruppe-20/backend";
 import { useSession } from "./auth.js";
 
@@ -144,6 +145,41 @@ export const useCreateBookMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["books"]);
+    },
+  });
+};
+
+export const useListReviewsQuery = () =>
+  useQuery({
+    queryKey: ["reviews"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/reviews/`,
+        method: "GET",
+      });
+      return response.data;
+    },
+  });
+
+export const useCreateReviewMutation = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  return useMutation({
+    mutationFn: async (data) => {
+      createReviewSchema.parse(data);
+      const response = await axios({
+        url: `${baseUrl}/api/reviews/`,
+        method: "POST",
+        data,
+        headers: {
+          "content-type": "application/json",
+          authorization: `Token ${session?.authToken}`,
+        },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["reviews"]);
     },
   });
 };

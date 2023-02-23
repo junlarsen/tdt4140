@@ -180,6 +180,7 @@ export const useCreateReviewMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["reviews"]);
+      queryClient.invalidateQueries(["books"]);
     },
   });
 };

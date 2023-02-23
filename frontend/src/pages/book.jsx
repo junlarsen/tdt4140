@@ -162,7 +162,6 @@ const BookReviewComment = ({ bookId }) => {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <Flex direction="column" py="lg">
-        {JSON.stringify(errors)}
         <Text color="dimmed">Legg inn en anmeldelse for denne boka</Text>
         <Textarea
           {...register("comment")}

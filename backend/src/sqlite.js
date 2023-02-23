@@ -40,7 +40,7 @@ export async function migrate(database, log = true, skipSeeding = false) {
       if (log) {
         console.log(`Performing migration ${file}`);
       }
-      await database.run(contents);
+      await database.exec(contents);
     }
   }
 }

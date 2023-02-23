@@ -12,6 +12,16 @@ export class BookController {
     res.json(books);
   }
 
+  async listHighestRated(req, res) {
+    const books = await this.#bookService.getHighestRatedBooks();
+    res.json(books);
+  }
+
+  async listMostRecentBooks(req, res) {
+    const books = await this.#bookService.getMostRecentBooks();
+    res.json(books);
+  }
+
   async create(req, res) {
     const form = createBookSchema.safeParse(req.body);
     if (!form.success) {

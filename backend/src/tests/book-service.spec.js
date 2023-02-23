@@ -108,4 +108,25 @@ describe("book service", () => {
     const populated = await bookService.list();
     expect(populated).toHaveLength(1);
   });
+
+  it("should list the most recent book", async () => {
+    await bookService.create({
+      title: "Harry Potter",
+      description: "Some book about some wizardry",
+      releaseYear: 2000,
+      image: "google.com/image",
+      genres: [genre1.id],
+      authors: [author1.id, author2.id],
+    });
+    const book = await bookService.create({
+      title: "Harry Potter 2",
+      description: "Some book about some wizardry",
+      releaseYear: 2003,
+      image: "google.com/image",
+      genres: [genre1.id],
+      authors: [author1.id, author2.id],
+    });
+    const newest = await bookService.getMostRecentBooks();
+    expect(newest[0]).toHaveProperty("id", book.id);
+  });
 });

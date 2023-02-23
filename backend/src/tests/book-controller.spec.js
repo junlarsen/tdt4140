@@ -40,6 +40,9 @@ describe("book controller", () => {
       controller.create(req, res),
     );
     app.get("/api/books/", (req, res) => controller.list(req, res));
+    app.get("/api/books/most-recent/", (req, res) =>
+      controller.listMostRecentBooks(req, res),
+    );
   });
 
   it("can create new books by admins", async () => {
@@ -110,5 +113,26 @@ describe("book controller", () => {
     const filled = await request(app).get("/api/books/");
     expect(filled.status).toEqual(200);
     expect(filled.body).toHaveLength(1);
+  });
+
+  it("should list the most recent book", async () => {
+    await bookService.create({
+      title: "Harry Potter",
+      description: "Some book about some wizardry",
+      releaseYear: 2000,
+      image: "google.com/image",
+      genres: [genre.id],
+      authors: [author.id],
+    });
+    const book = await bookService.create({
+      title: "Harry Potter 2",
+      description: "Some book about some wizardry",
+      releaseYear: 2003,
+      image: "google.com/image",
+      genres: [genre.id],
+      authors: [author.id],
+    });
+    const newest = await request(app).get("/api/books/most-recent/");
+    expect(newest.body[0]).toHaveProperty("id", book.id);
   });
 });

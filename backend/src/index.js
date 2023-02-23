@@ -58,6 +58,12 @@ app.post("/api/books/", auth, adminOnly, (req, res) =>
   bookController.create(req, res),
 );
 app.get("/api/books/", (req, res) => bookController.list(req, res));
+app.get("/api/books/highest-rated/", (req, res) =>
+  bookController.listHighestRated(req, res),
+);
+app.get("/api/books/most-recent/", (req, res) =>
+  bookController.listMostRecentBooks(req, res),
+);
 
 //ReviewController
 app.get("/api/reviews/", (req, res) => reviewController.list(req, res));

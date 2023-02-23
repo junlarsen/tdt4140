@@ -85,4 +85,15 @@ describe("review service", () => {
       });
     }).rejects.toThrowError();
   });
+
+  it("will show highest rated book", async () => {
+    await reviewService.create({
+      userId: 1,
+      bookId: 1,
+      rating: 4,
+      comment: "This book was a nice read",
+    });
+    const highest = await bookService.getHighestRatedBooks();
+    expect(highest[0]).toHaveProperty("averageRating", 4);
+  });
 });

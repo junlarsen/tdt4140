@@ -96,26 +96,26 @@ const Links = () => {
         },
       );
     } else {
-      links.push(
-        {
-          icon: "mdi:book-heart",
-          href: "/my-favorites",
-          label: "Mine favoritter",
-          color: theme.colors.red[4],
-        },
-        {
-          icon: "mdi:message-draw",
-          href: "/my-reviews",
-          label: "Mine anmeldelser",
-          color: theme.colors.green[4],
-        },
-        {
-          icon: "mdi:view-list",
-          href: "/my-lists",
-          label: "Mine lister",
-          color: theme.colors.yellow[4],
-        },
-      );
+      // links.push(
+      //   {
+      //     icon: "mdi:book-heart",
+      //     href: "/my-favorites",
+      //     label: "Mine favoritter",
+      //     color: theme.colors.red[4],
+      //   },
+      //   {
+      //     icon: "mdi:message-draw",
+      //     href: "/my-reviews",
+      //     label: "Mine anmeldelser",
+      //     color: theme.colors.green[4],
+      //   },
+      //   {
+      //     icon: "mdi:view-list",
+      //     href: "/my-lists",
+      //     label: "Mine lister",
+      //     color: theme.colors.yellow[4],
+      //   },
+      // );
     }
   }
 

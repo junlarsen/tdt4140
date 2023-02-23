@@ -13,6 +13,16 @@ export class BookService {
     this.#genreService = genreService;
   }
 
+  async getHighestRatedBooks() {
+    const all = await this.list();
+    return all.sort((x, y) => y.averageRating - x.averageRating).slice(0, 8);
+  }
+
+  async getMostRecentBooks() {
+    const all = await this.list();
+    return all.sort((x, y) => y.release_year - x.release_year).slice(0, 8);
+  }
+
   async getAverageRating(id) {
     const rating = await this.#database.get(
       `SELECT AVG(reviews.rating), COUNT(*) FROM reviews WHERE book_id = $bookId`,

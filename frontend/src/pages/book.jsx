@@ -78,11 +78,14 @@ export const Book = () => {
                 ) : (
                   <>
                     Våre brukere har gitt en gjennomsnittlig anmeldelse på{" "}
-                    <Rating
-                      defaultValue={book.averageRating}
-                      fractions={2}
-                      readOnly
-                    />
+                    <Flex>
+                      <Rating
+                        defaultValue={book.averageRating}
+                        fractions={10}
+                        readOnly
+                      />
+                      <span>({book.averageRating?.toFixed(2)})</span>
+                    </Flex>
                   </>
                 )}
               </Text>

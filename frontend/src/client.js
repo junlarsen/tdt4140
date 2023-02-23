@@ -126,6 +126,30 @@ export const useListBooksQuery = () =>
     },
   });
 
+export const useListHighestRatedBooksQuery = () =>
+  useQuery({
+    queryKey: ["books-rated"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/books/highest-rated/`,
+        method: "GET",
+      });
+      return response.data;
+    },
+  });
+
+export const useListMostRecentBooksQuery = () =>
+  useQuery({
+    queryKey: ["books-recent"],
+    queryFn: async () => {
+      const response = await axios({
+        url: `${baseUrl}/api/books/most-recent/`,
+        method: "GET",
+      });
+      return response.data;
+    },
+  });
+
 export const useCreateBookMutation = () => {
   const queryClient = useQueryClient();
   const session = useSession();
@@ -145,6 +169,8 @@ export const useCreateBookMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["books"]);
+      queryClient.invalidateQueries(["books-recent"]);
+      queryClient.invalidateQueries(["books-rated"]);
     },
   });
 };

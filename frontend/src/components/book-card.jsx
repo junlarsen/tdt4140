@@ -1,4 +1,13 @@
-import { Card, Image, Group, Text, Badge, Button, Rating } from "@mantine/core";
+import {
+  Card,
+  Image,
+  Group,
+  Text,
+  Badge,
+  Button,
+  Rating,
+  Flex,
+} from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
 export const BookCard = ({ book }) => {
@@ -18,7 +27,14 @@ export const BookCard = ({ book }) => {
       </Card.Section>
       <Group position="apart" mt="md" mb="xs">
         <Text weight={500}>{book.title}</Text>
-        <Rating defaultValue={book.averageRating ?? 0} fractions={2} readOnly />
+        <Flex>
+          <Rating
+            defaultValue={book.averageRating ?? 0}
+            fractions={10}
+            readOnly
+          />
+          <span>({book.averageRating?.toFixed(2) ?? "0.00"})</span>
+        </Flex>
         <Badge color="pink" variant="light">
           {book.release_year}
         </Badge>

@@ -33,6 +33,7 @@ describe("review contoller", () => {
     controller = new BookController(bookService);
     reviewService = new ReviewService(database);
     controller = new ReviewController(reviewService);
+    const bookController = new BookController(bookService);
     userJwt = (await userService.login("user@ibdb.ntnu.no", "user")).jwt;
     user = await userService.find("user@ibdb.ntnu.no");
     const auth = withAuth(userService);
@@ -50,6 +51,9 @@ describe("review contoller", () => {
     app.use(express.json());
     app.post("/api/reviews/", auth, (req, res) => controller.create(req, res));
     app.get("/api/reviews/", (req, res) => controller.list(req, res));
+    app.get("/api/books/highest-rated/", (req, res) =>
+      bookController.listHighestRated(req, res),
+    );
   });
 
   it("test create a review", async () => {
@@ -94,5 +98,16 @@ describe("review contoller", () => {
     const filled = await request(app).get("/api/reviews/");
     expect(filled.status).toEqual(200);
     expect(filled.body).toHaveLength(1);
+  });
+
+  it("will show highest rated book", async () => {
+    await reviewService.create({
+      userId: 1,
+      bookId: 1,
+      rating: 4,
+      comment: "This book was a nice read",
+    });
+    const highest = await request(app).get("/api/books/highest-rated/");
+    expect(highest.body[0]).toHaveProperty("averageRating", 4);
   });
 });

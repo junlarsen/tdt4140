@@ -40,15 +40,20 @@ describe("review service", () => {
     const review = await reviewService.create({
       userId: user.id,
       bookId: book.id,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
     });
     expect(review).toStrictEqual({
       user_id: user.id,
       book_id: book.id,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
+      username: user.username,
     });
+    // The book should now have a new average rating
+    const updatedBook = await bookService.find(book.id);
+    expect(updatedBook).toHaveProperty("averageRating", 4);
+    expect(updatedBook).toHaveProperty("ratingCount", 1);
   });
 
   it("can list reviews", async () => {
@@ -57,7 +62,7 @@ describe("review service", () => {
     await reviewService.create({
       userId: 1,
       bookId: 1,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
     });
     const one_review = await reviewService.list();
@@ -68,14 +73,14 @@ describe("review service", () => {
     await reviewService.create({
       userId: 1,
       bookId: 1,
-      rating: 8,
+      rating: 4,
       comment: "This book was a nice read",
     });
     await expect(() => {
       return reviewService.create({
         userId: 1,
         bookId: 1,
-        rating: 8,
+        rating: 4,
         comment: "This book was a nice read",
       });
     }).rejects.toThrowError();

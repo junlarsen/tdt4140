@@ -11,7 +11,7 @@ import {
   Input,
   useMantineTheme,
 } from "@mantine/core";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useLogout, useSession } from "../auth.js";
 import { useForm } from "react-hook-form";
@@ -70,12 +70,12 @@ const Links = () => {
   if (session !== null) {
     if (session.user.user_role === "a") {
       links.push(
-        {
-          icon: "mdi:file-document-remove",
-          href: "/admin/remove-reviews",
-          label: "Fjern anmeldelser",
-          color: theme.colors.teal[4],
-        },
+        // {
+        //   icon: "mdi:file-document-remove",
+        //   href: "/admin/remove-reviews",
+        //   label: "Fjern anmeldelser",
+        //   color: theme.colors.teal[4],
+        // },
         {
           icon: "mdi:book-plus",
           href: "/admin/books",

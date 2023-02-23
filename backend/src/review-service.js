@@ -9,10 +9,10 @@ export class ReviewService {
 
   async find(userId, bookId) {
     const review = await this.#database.get(
-      `SELECT *
-       FROM reviews
+      `SELECT user_id, book_id, rating, comment, users.username AS username FROM reviews
+       INNER JOIN users ON users.id = reviews.user_id
        WHERE reviews.user_id = $userId
-         AND reviews.book_id = $bookId`,
+       AND reviews.book_id = $bookId`,
       {
         $userId: userId,
         $bookId: bookId,

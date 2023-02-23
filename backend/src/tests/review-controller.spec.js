@@ -58,14 +58,15 @@ describe("review contoller", () => {
       .set("Authorization", `Token ${userJwt}`)
       .send({
         book_id: 1,
-        rating: 8,
+        rating: 4,
         comment: "This book was a clean read",
       });
     expect(added.status).toEqual(201);
     expect(added.body).toStrictEqual({
       user_id: user.id,
       book_id: 1,
-      rating: 8,
+      rating: 4,
+      username: user.username,
       comment: "This book was a clean read",
     });
   });
@@ -74,7 +75,7 @@ describe("review contoller", () => {
     const rejected = await request(app).post("/api/reviews/").send({
       user_id: user.id,
       book_id: 1,
-      rating: 8,
+      rating: 4,
       comment: "This book was a clean read",
     });
     expect(rejected.status).toEqual(401);

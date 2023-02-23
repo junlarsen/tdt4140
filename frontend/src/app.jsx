@@ -17,6 +17,7 @@ import { AdminGenres } from "./pages/admin/genres";
 import { AdminAuthors } from "./pages/admin/authors.jsx";
 import { AdminBooks } from "./pages/admin/books.jsx";
 import { Search } from "./pages/search.jsx";
+import { Book } from "./pages/book.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +30,9 @@ const router = createBrowserRouter(
         <Route path="genres" element={<AdminGenres />} />
         <Route path="authors" element={<AdminAuthors />} />
         <Route path="books" element={<AdminBooks />} />
+      </Route>
+      <Route path="books" element={<Outlet />}>
+        <Route path=":book" element={<Book />} />
       </Route>
     </Route>,
   ),

@@ -23,7 +23,7 @@ describe("review service", () => {
     reviewService = new ReviewService(database);
     const userService = new UserService(database);
 
-    user = await userService.find("user@ibdb.ntnu.no");
+    user = await userService.find("user@test.no");
     const author = await authorService.create({ name: "John Doe" });
     const genre = await genreService.create({ name: "Romance" });
     book = await bookService.create({

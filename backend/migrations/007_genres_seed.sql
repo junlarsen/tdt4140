@@ -1,1 +1,1 @@
-INSERT OR IGNORE INTO genres (name, id) VALUES ('Horror', 100), ('Fantasy', 101);
+INSERT OR IGNORE INTO genres (name) VALUES ('Horror'), ('Fantasy');

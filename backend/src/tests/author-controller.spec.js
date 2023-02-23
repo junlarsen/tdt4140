@@ -22,8 +22,8 @@ describe("author controller", () => {
     authorService = new AuthorService(database);
     controller = new AuthorController(authorService);
     const auth = withAuth(userService);
-    userJwt = (await userService.login("user@ibdb.ntnu.no", "user")).jwt;
-    adminJwt = (await userService.login("admin@ibdb.ntnu.no", "admin")).jwt;
+    userJwt = (await userService.login("user@test.no", "user")).jwt;
+    adminJwt = (await userService.login("admin@test.no", "admin")).jwt;
     app = express();
     app.use(express.json());
     app.get("/api/authors/", auth, (req, res) => controller.list(req, res));

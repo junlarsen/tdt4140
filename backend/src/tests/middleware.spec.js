@@ -23,7 +23,7 @@ describe("auth middleware", () => {
       password: "123",
       email: "foo@doot.com",
     });
-    adminJwt = (await userService.login("admin@ibdb.ntnu.no", "admin")).jwt;
+    adminJwt = (await userService.login("admin@test.no", "admin")).jwt;
     userJwt = (await userService.login("foo@doot.com", "123")).jwt;
     app = express();
     app.get("/", middleware, (req, res) => res.json(req.user).send());

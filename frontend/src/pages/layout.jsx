@@ -6,12 +6,13 @@ import {
   Text,
   Flex,
   Button,
-  UnstyledButton,
   Group,
   Input,
   useMantineTheme,
+  useMantineColorScheme,
+  NavLink,
 } from "@mantine/core";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useLogout, useSession } from "../auth.js";
 import { useForm } from "react-hook-form";
@@ -19,6 +20,7 @@ import { useForm } from "react-hook-form";
 const Logo = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
+  const colorScheme = useMantineColorScheme();
   const onSearchNavigate = (data) => {
     navigate(`/search?q=${data.query}`);
   };
@@ -36,20 +38,28 @@ const Logo = () => {
             IBDB
           </Text>
         </Flex>
-        <form onSubmit={handleSubmit(onSearchNavigate)}>
-          <Flex columnGap="xs">
-            <Input
-              sx={{ width: 300 }}
-              placeholder="Søk etter bok eller forfatter"
-              {...register("query", {
-                required: true,
-                minLength: 1,
-              })}
-              icon={<Icon icon="mdi:search" width={20} height={20} />}
-            />
-            <Button type="submit">Søk</Button>
-          </Flex>
-        </form>
+        <Group>
+          <Button
+            variant="subtle"
+            onClick={() => colorScheme.toggleColorScheme()}
+          >
+            <Icon icon="tabler:sun-moon" width={28} height={28} />
+          </Button>
+          <form onSubmit={handleSubmit(onSearchNavigate)}>
+            <Flex columnGap="xs">
+              <Input
+                sx={{ width: 300 }}
+                placeholder="Søk etter bok eller forfatter"
+                {...register("query", {
+                  required: true,
+                  minLength: 1,
+                })}
+                icon={<Icon icon="mdi:search" width={20} height={20} />}
+              />
+              <Button type="submit">Søk</Button>
+            </Flex>
+          </form>
+        </Group>
       </Group>
     </Header>
   );
@@ -122,26 +132,14 @@ const Links = () => {
   return (
     <Box>
       {links.map((link) => (
-        <UnstyledButton
-          key={link.href}
+        <NavLink
           onClick={() => navigate(link.href)}
-          sx={(theme) => ({
-            display: "block",
-            width: "100%",
-            padding: theme.spacing.xs,
-            borderRadius: theme.radius.sm,
-            color: theme.black,
-
-            "&:hover": {
-              backgroundColor: theme.colors.gray[0],
-            },
-          })}
-        >
-          <Group>
+          childrenOffset="xl"
+          icon={
             <Icon width={40} color={link.color} height={40} icon={link.icon} />
-            <Text size="sm">{link.label}</Text>
-          </Group>
-        </UnstyledButton>
+          }
+          label={<Text size="sm">{link.label}</Text>}
+        />
       ))}
     </Box>
   );

@@ -26,7 +26,9 @@ export const BookCard = ({ book }) => {
           alt="Book cover"
         />
       </Card.Section>
-        <Text weight={500} style={{ minHeight: 60 }}>{book.title}</Text>
+      <Text weight={500} style={{ minHeight: 60 }}>
+        {book.title}
+      </Text>
       <Group position="apart" mt="md" mb="xs">
         <Flex>
           <Rating

@@ -19,14 +19,15 @@ export const BookCard = ({ book }) => {
           style={{
             mixBlendMode: "multiply",
           }}
+          height={360}
           fit="cover"
           withPlaceholder
           src={book.image || "/book-cover-placeholder.png"}
           alt="Book cover"
         />
       </Card.Section>
+        <Text weight={500} style={{ minHeight: 60 }}>{book.title}</Text>
       <Group position="apart" mt="md" mb="xs">
-        <Text weight={500}>{book.title}</Text>
         <Flex>
           <Rating
             defaultValue={book.averageRating ?? 0}
@@ -39,7 +40,7 @@ export const BookCard = ({ book }) => {
           {book.release_year}
         </Badge>
       </Group>
-      <Group py="sm">
+      <Flex gap="md" wrap="wrap" py="sm" style={{ minHeight: 80 }}>
         {book.authors.map((author) => (
           <Badge key={author.id} color="blue" variant="light">
             {author.name}
@@ -50,10 +51,7 @@ export const BookCard = ({ book }) => {
             {genre.name}
           </Badge>
         ))}
-      </Group>
-      <Text size="sm" color="dimmed">
-        {book.description || "Ingen beskrivelse oppgitt for denne boka."}
-      </Text>
+      </Flex>
       <Button
         variant="light"
         color="blue"

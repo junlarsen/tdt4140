@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, useState } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,7 +6,11 @@ import {
   Route,
 } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import { MantineProvider } from "@mantine/core";
+import {
+  ColorSchemeProvider,
+  MantineProvider,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { Registration } from "./pages/registration.jsx";
 import { Layout } from "./pages/layout";
@@ -18,6 +22,7 @@ import { AdminAuthors } from "./pages/admin/authors.jsx";
 import { AdminBooks } from "./pages/admin/books.jsx";
 import { Search } from "./pages/search.jsx";
 import { Book } from "./pages/book.jsx";
+import { useColorScheme } from "@mantine/hooks";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,23 +45,50 @@ const router = createBrowserRouter(
 
 const queryClient = new QueryClient();
 
+const MantineColorSchemeProvider = ({ children }) => {
+  const preferredColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useState(preferredColorScheme);
+  const toggleColorScheme = (value) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  return (
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
+      {children}
+    </ColorSchemeProvider>
+  );
+};
+
+const MantineBaseProvider = ({ children }) => {
+  const { colorScheme } = useMantineColorScheme();
+
+  return (
+    <MantineProvider
+      withGlobalStyles
+      theme={{
+        colorScheme,
+      }}
+      withNormalizeCSS
+    >
+      {children}
+    </MantineProvider>
+  );
+};
+
 export const App = () => {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <MantineProvider
-          withGlobalStyles
-          theme={{
-            colorScheme: "light",
-          }}
-          withNormalizeCSS
-        >
-          <NotificationsProvider>
-            <RouterProvider router={router}>
-              <Outlet />
-            </RouterProvider>
-          </NotificationsProvider>
-        </MantineProvider>
+        <MantineColorSchemeProvider>
+          <MantineBaseProvider>
+            <NotificationsProvider>
+              <RouterProvider router={router}>
+                <Outlet />
+              </RouterProvider>
+            </NotificationsProvider>
+          </MantineBaseProvider>
+        </MantineColorSchemeProvider>
       </QueryClientProvider>
     </StrictMode>
   );

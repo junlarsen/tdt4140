@@ -175,6 +175,25 @@ export const useCreateBookMutation = () => {
   });
 };
 
+export const useFetchRatingsMutation = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  return useMutation({
+    mutationFn: async () => {
+      await axios({
+        url: `${baseUrl}/api/books/fetch-ratings`,
+        method: "POST",
+        headers: {
+          authorization: `Token ${session?.authToken}`,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["books"]);
+    },
+  });
+};
+
 export const useListReviewsQuery = () =>
   useQuery({
     queryKey: ["reviews"],

@@ -56,6 +56,7 @@ describe("book controller", () => {
         image: null,
         genres: [genre.id],
         authors: [author.id],
+        goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
       });
     expect(added.status).toEqual(201);
     expect(added.body).toStrictEqual({
@@ -66,6 +67,8 @@ describe("book controller", () => {
       image: null,
       authors: [{ id: 1, name: "Horror" }],
       genres: [{ id: 1, name: "J.K. Rowling" }],
+      goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+      goodreads_rating: 0,
       averageRating: null,
       ratingCount: 0,
     });
@@ -82,6 +85,7 @@ describe("book controller", () => {
         image: null,
         genres: [genre.id],
         authors: [],
+        goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
       });
     expect(noAuthor.status).toEqual(400);
     const noGenre = await request(app)
@@ -94,6 +98,7 @@ describe("book controller", () => {
         image: null,
         genres: [],
         authors: [author.id],
+        goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
       });
     expect(noGenre.status).toEqual(400);
   });
@@ -109,6 +114,7 @@ describe("book controller", () => {
       image: "google.com/image",
       genres: [genre.id],
       authors: [author.id],
+      goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const filled = await request(app).get("/api/books/");
     expect(filled.status).toEqual(200);
@@ -123,6 +129,7 @@ describe("book controller", () => {
       image: "google.com/image",
       genres: [genre.id],
       authors: [author.id],
+      goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const book = await bookService.create({
       title: "Harry Potter 2",
@@ -131,6 +138,7 @@ describe("book controller", () => {
       image: "google.com/image",
       genres: [genre.id],
       authors: [author.id],
+      goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const newest = await request(app).get("/api/books/most-recent/");
     expect(newest.body[0]).toHaveProperty("id", book.id);

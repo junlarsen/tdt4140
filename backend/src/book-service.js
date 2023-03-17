@@ -1,6 +1,8 @@
 import { bookSchema } from "./book.js";
 import { authorSchema } from "./author.js";
 import { genreSchema } from "./genre.js";
+import { load } from "cheerio";
+import fetch from "node-fetch";
 
 export class BookService {
   #database;
@@ -106,14 +108,23 @@ export class BookService {
     return bookSchema.parse(fullBook);
   }
 
-  async create({ title, releaseYear, description, image, genres, authors }) {
+  async create({
+    title,
+    releaseYear,
+    description,
+    image,
+    genres,
+    authors,
+    goodreadsUrl,
+  }) {
     const book = await this.#database.get(
-      "INSERT INTO books (title, release_year, description, image) VALUES ($title, $releaseYear, $description, $image) RETURNING *",
+      "INSERT INTO books (title, release_year, description, image, goodreads_url) VALUES ($title, $releaseYear, $description, $image, $goodreadsUrl) RETURNING *",
       {
         $title: title,
         $releaseYear: releaseYear,
         $description: description,
         $image: image,
+        $goodreadsUrl: goodreadsUrl,
       },
     );
     for (const genre of genres) {
@@ -123,5 +134,30 @@ export class BookService {
       await this.createBookOnAuthor({ bookId: book.id, authorId: author });
     }
     return this.find(book.id);
+  }
+
+  async getAllGoodreadsRatings() {
+    const books = await this.list();
+    for (const book of books) {
+      if (!book.goodreads_url) {
+        continue;
+      }
+      const response = await fetch(book.goodreads_url);
+      const body = await response.text();
+      const cheerio = load(body);
+      const matches = cheerio(".RatingStatistics__rating");
+      if (matches.length < 1) {
+        throw new Error(`Failed to get rating for book ${book.name}`);
+      }
+      const rating = matches.first().text();
+      const value = parseFloat(rating);
+      await this.#database.get(
+        `UPDATE books SET goodreads_rating = $rating WHERE id = $id`,
+        {
+          $rating: value,
+          $id: book.id,
+        },
+      );
+    }
   }
 }

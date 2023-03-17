@@ -35,6 +35,7 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1.id],
       authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     expect(book).toStrictEqual({
       id: 1,
@@ -45,6 +46,8 @@ describe("book service", () => {
       genres: [genre1],
       authors: [author1, author2],
       averageRating: null,
+      goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+      goodreads_rating: 0,
       ratingCount: 0,
     });
   });
@@ -57,6 +60,7 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1.id],
       authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     await expect(() =>
       bookService.createBookOnAuthor({ bookId: book.id, authorId: author1.id }),
@@ -74,6 +78,7 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1.id],
       authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const found = await bookService.find(book.id);
     expect(found.id).toEqual(book.id);
@@ -87,6 +92,7 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1.id],
       authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const genres = await bookService.getGenres(book.id);
     expect(genres).toHaveLength(1);
@@ -104,6 +110,7 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1.id],
       authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const populated = await bookService.list();
     expect(populated).toHaveLength(1);
@@ -117,6 +124,7 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1.id],
       authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const book = await bookService.create({
       title: "Harry Potter 2",
@@ -125,8 +133,24 @@ describe("book service", () => {
       image: "google.com/image",
       genres: [genre1.id],
       authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
     });
     const newest = await bookService.getMostRecentBooks();
     expect(newest[0]).toHaveProperty("id", book.id);
+  });
+
+  it("can fetch all ratings on books from goodreads", async () => {
+    const book = await bookService.create({
+      title: "Harry Potter",
+      description: "Some book about some wizardry",
+      releaseYear: 2000,
+      image: "google.com/image",
+      genres: [genre1.id],
+      authors: [author1.id, author2.id],
+      goodreadsUrl: "https://www.goodreads.com/book/show/7670800-clementine",
+    });
+    await bookService.getAllGoodreadsRatings();
+    const updated = await bookService.find(book.id);
+    expect(updated.goodreads_rating).toEqual(3.71);
   });
 });

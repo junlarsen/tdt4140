@@ -31,10 +31,16 @@ export class BookController {
       const book = await this.#bookService.create({
         ...form.data,
         releaseYear: form.data.release_year,
+        goodreadsUrl: form.data.goodreads_url,
       });
       return res.status(201).json(book);
     } catch (err) {
       return res.sendStatus(500);
     }
+  }
+
+  async updateGoodreadsRatings(req, res) {
+    await this.#bookService.getAllGoodreadsRatings();
+    res.sendStatus(200);
   }
 }

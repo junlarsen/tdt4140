@@ -72,7 +72,7 @@ export const Book = () => {
                 skrevet av{" "}
                 {book.authors.map((author) => author.name).join(", ")}.
               </Text>
-              <Text>
+              <Group>
                 {book.averageRating === null ? (
                   "Ingen av våre brukere har anmeldt denne boka enda."
                 ) : (
@@ -88,7 +88,20 @@ export const Book = () => {
                     </Flex>
                   </>
                 )}
-              </Text>
+                {book.goodreads_rating !== 0 && (
+                  <>
+                    På GoodReads har denne boka en gjennomsnittlig anmeldelse på{" "}
+                    <Flex>
+                      <Rating
+                        defaultValue={book.goodreads_rating}
+                        fractions={10}
+                        readOnly
+                      />
+                      <span>({book.goodreads_rating?.toFixed(2)})</span>
+                    </Flex>
+                  </>
+                )}
+              </Group>
               <List>
                 <List.Item>
                   Sjangere: {book.genres.map((genre) => genre.name).join(", ")}

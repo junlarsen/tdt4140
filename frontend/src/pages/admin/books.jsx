@@ -2,7 +2,11 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { showNotification } from "@mantine/notifications";
-import { useCreateBookMutation, useListBooksQuery } from "../../client.js";
+import {
+  useCreateBookMutation,
+  useFetchRatingsMutation,
+  useListBooksQuery,
+} from "../../client.js";
 import { createBookSchema } from "@gruppe-20/backend";
 import {
   Flex,
@@ -15,6 +19,7 @@ import {
   Loader,
   Modal,
   Table,
+  Group,
 } from "@mantine/core";
 import { ErrorMessage } from "@hookform/error-message";
 import { useListGenresQuery, useListAuthorsQuery } from "../../client.js";
@@ -63,6 +68,14 @@ const columns = [
     header: () => <Text>Bilde URL</Text>,
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor("goodreads_rating", {
+    header: () => <Text>GoodReads Rating</Text>,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("goodreads_url", {
+    header: () => <Text>GoodReads URL</Text>,
+    cell: (info) => info.getValue(),
+  }),
 ];
 
 export const AdminBooks = () => {
@@ -73,6 +86,24 @@ export const AdminBooks = () => {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+  const { mutate, isSuccess } = useFetchRatingsMutation();
+  useEffect(() => {
+    if (isSuccess) {
+      showNotification({
+        title: "Suksess",
+        message: `Alle anmeldelser fra GoodReads har blitt importert`,
+        color: "blue",
+      });
+    }
+  }, [isSuccess]);
+  const onFetchRatingsClick = () => {
+    mutate();
+    showNotification({
+      title: "Henter data",
+      message: `Henter bokdata fra GoodReads`,
+      color: "blue",
+    });
+  };
 
   return (
     <Flex direction="column" rowGap="md">
@@ -81,7 +112,12 @@ export const AdminBooks = () => {
         Her får du en oversikt over eksisterende bøker, og muligheten til å
         legge til nye
       </Text>
-      <Button onClick={() => setPopupVisible(true)}>Opprett ny</Button>
+      <Group>
+        <Button onClick={() => setPopupVisible(true)}>Opprett ny</Button>
+        <Button onClick={() => onFetchRatingsClick()} variant="outline">
+          Oppdater GoodReads ratings
+        </Button>
+      </Group>
       {isPopupVisible && (
         <AdminBooksPopup onClose={() => setPopupVisible(false)} />
       )}
@@ -208,6 +244,15 @@ const AdminBooksPopup = ({ onClose }) => {
               error={
                 errors.description && (
                   <ErrorMessage errors={errors} name="description" />
+                )
+              }
+            />
+            <TextInput
+              {...register("goodreads_url")}
+              placeholder="https://www.goodreads.com/book/show/9222475-infernal-devices"
+              error={
+                errors.goodreads_url && (
+                  <ErrorMessage errors={errors} name="goodreads_url" />
                 )
               }
             />

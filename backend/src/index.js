@@ -64,6 +64,9 @@ app.get("/api/books/highest-rated/", (req, res) =>
 app.get("/api/books/most-recent/", (req, res) =>
   bookController.listMostRecentBooks(req, res),
 );
+app.post("/api/books/fetch-ratings", auth, adminOnly, (req, res) =>
+  bookController.updateGoodreadsRatings(req, res),
+);
 
 //ReviewController
 app.get("/api/reviews/", (req, res) => reviewController.list(req, res));

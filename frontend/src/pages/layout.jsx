@@ -133,6 +133,7 @@ const Links = () => {
     <Box>
       {links.map((link) => (
         <NavLink
+          key={link.href}
           onClick={() => navigate(link.href)}
           childrenOffset="xl"
           icon={

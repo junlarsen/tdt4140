@@ -7,6 +7,7 @@ import {
   createAuthorSchema,
   createBookSchema,
   createReviewSchema,
+  deleteReviewSchema,
 } from "@gruppe-20/backend";
 import { useSession } from "./auth.js";
 
@@ -215,6 +216,30 @@ export const useCreateReviewMutation = () => {
       const response = await axios({
         url: `${baseUrl}/api/reviews/`,
         method: "POST",
+        data,
+        headers: {
+          "content-type": "application/json",
+          authorization: `Token ${session?.authToken}`,
+        },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["reviews"]);
+      queryClient.invalidateQueries(["books"]);
+    },
+  });
+};
+
+export const useDeleteReviewMutation = () => {
+  const queryClient = useQueryClient();
+  const session = useSession();
+  return useMutation({
+    mutationFn: async (data) => {
+      deleteReviewSchema.parse(data);
+      const response = await axios({
+        url: `${baseUrl}/api/reviews/`,
+        method: "DELETE",
         data,
         headers: {
           "content-type": "application/json",

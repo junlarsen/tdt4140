@@ -23,6 +23,7 @@ describe("review contoller", () => {
   let book;
   let user;
   let userJwt;
+  let adminJwt;
 
   beforeEach(async () => {
     database = await createMockDatabase();
@@ -35,6 +36,7 @@ describe("review contoller", () => {
     controller = new ReviewController(reviewService);
     const bookController = new BookController(bookService);
     userJwt = (await userService.login("user@test.no", "user")).jwt;
+    adminJwt = (await userService.login("admin@test.no", "admin")).jwt;
     user = await userService.find("user@test.no");
     const auth = withAuth(userService);
     const author = await authorService.create({ name: "John Doe" });
@@ -55,6 +57,9 @@ describe("review contoller", () => {
     app.get("/api/reviews/", (req, res) => controller.list(req, res));
     app.get("/api/books/highest-rated/", (req, res) =>
       bookController.listHighestRated(req, res),
+    );
+    app.delete("/api/reviews/", auth, adminOnly, (req, res) =>
+      controller.delete(req, res),
     );
   });
 
@@ -111,5 +116,26 @@ describe("review contoller", () => {
     });
     const highest = await request(app).get("/api/books/highest-rated/");
     expect(highest.body[0]).toHaveProperty("averageRating", 4);
+  });
+
+  it("can delete reviews", async () => {
+    const review = await reviewService.create({
+      userId: 1,
+      bookId: 1,
+      rating: 4,
+      comment: "This book was a nice read",
+    });
+    const all = await reviewService.list();
+    expect(all).toContainEqual(review);
+    const response = await request(app)
+      .delete("/api/reviews/")
+      .set("authorization", `Token ${adminJwt}`)
+      .send({
+        user_id: review.user_id,
+        book_id: review.book_id,
+      });
+    expect(response.status).toEqual(204);
+    const all2 = await reviewService.list();
+    expect(all2).not.toContainEqual(review);
   });
 });

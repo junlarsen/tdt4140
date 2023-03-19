@@ -12,3 +12,8 @@ export const createReviewSchema = reviewSchema.omit({
   user_id: true,
   username: true,
 });
+
+export const deleteReviewSchema = reviewSchema.pick({
+  user_id: true,
+  book_id: true,
+});

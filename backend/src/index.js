@@ -73,5 +73,8 @@ app.get("/api/reviews/", (req, res) => reviewController.list(req, res));
 app.post("/api/reviews/", auth, (req, res) =>
   reviewController.create(req, res),
 );
+app.delete("/api/reviews/", auth, adminOnly, (req, res) =>
+  reviewController.delete(req, res),
+);
 
 app.listen(3001);

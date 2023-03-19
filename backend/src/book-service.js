@@ -1,8 +1,6 @@
 import { bookSchema } from "./book.js";
 import { authorSchema } from "./author.js";
 import { genreSchema } from "./genre.js";
-import { load } from "cheerio";
-import fetch from "node-fetch";
 
 export class BookService {
   #database;
@@ -116,15 +114,19 @@ export class BookService {
     genres,
     authors,
     goodreadsUrl,
+    goodreadsRating,
+    newspapersRating,
   }) {
     const book = await this.#database.get(
-      "INSERT INTO books (title, release_year, description, image, goodreads_url) VALUES ($title, $releaseYear, $description, $image, $goodreadsUrl) RETURNING *",
+      "INSERT INTO books (title, release_year, description, image, goodreads_url, goodreads_rating, newspapers_rating) VALUES ($title, $releaseYear, $description, $image, $goodreadsUrl, $goodreadsRating, $newspapersRating) RETURNING *",
       {
         $title: title,
         $releaseYear: releaseYear,
         $description: description,
         $image: image,
         $goodreadsUrl: goodreadsUrl,
+        $goodreadsRating: goodreadsRating,
+        $newspapersRating: newspapersRating,
       },
     );
     for (const genre of genres) {
@@ -136,28 +138,32 @@ export class BookService {
     return this.find(book.id);
   }
 
-  async getAllGoodreadsRatings() {
-    const books = await this.list();
-    for (const book of books) {
-      if (!book.goodreads_url) {
-        continue;
-      }
-      const response = await fetch(book.goodreads_url);
-      const body = await response.text();
-      const cheerio = load(body);
-      const matches = cheerio(".RatingStatistics__rating");
-      if (matches.length < 1) {
-        throw new Error(`Failed to get rating for book ${book.name}`);
-      }
-      const rating = matches.first().text();
-      const value = parseFloat(rating);
-      await this.#database.get(
-        `UPDATE books SET goodreads_rating = $rating WHERE id = $id`,
-        {
-          $rating: value,
-          $id: book.id,
-        },
-      );
-    }
-  }
+  // async getAllGoodreadsRatings() {
+  //   const books = await this.list();
+  //   for (const book of books) {
+  //     if (!book.goodreads_url) {
+  //       continue;
+  //     }
+  //     const response = await fetch(book.goodreads_url);
+  //     const body = await response.text();
+  //     const cheerio = load(body);
+  //     const matches = cheerio(".RatingStatistics__rating");
+  //     if (matches.length < 1) {
+  //       console.info(body, matches);
+  //       console.error(
+  //         `Failed to get rating for book ${book.title} (HTTP ${response.status})`,
+  //       );
+  //       continue;
+  //     }
+  //     const rating = matches.first().text();
+  //     const value = parseFloat(rating);
+  //     await this.#database.get(
+  //       `UPDATE books SET goodreads_rating = $rating WHERE id = $id`,
+  //       {
+  //         $rating: value,
+  //         $id: book.id,
+  //       },
+  //     );
+  //   }
+  // }
 }

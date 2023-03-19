@@ -32,6 +32,8 @@ export class BookController {
         ...form.data,
         releaseYear: form.data.release_year,
         goodreadsUrl: form.data.goodreads_url,
+        newspapersRating: form.data.newspapers_rating,
+        goodreadsRating: form.data.goodreads_rating,
       });
       return res.status(201).json(book);
     } catch (err) {
@@ -39,8 +41,8 @@ export class BookController {
     }
   }
 
-  async updateGoodreadsRatings(req, res) {
-    await this.#bookService.getAllGoodreadsRatings();
-    res.sendStatus(200);
-  }
+  // async updateGoodreadsRatings(req, res) {
+  //   await this.#bookService.getAllGoodreadsRatings();
+  //   res.sendStatus(200);
+  // }
 }

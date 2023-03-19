@@ -1,0 +1,2 @@
+ALTER TABLE books
+ADD COLUMN newspapers_rating REAL NOT NULL DEFAULT 0.0

@@ -33,6 +33,8 @@ describe("review service", () => {
       genres: [genre.id],
       description: "A book about ponies",
       image: null,
+      newspapersRating: 4.3,
+      goodreadsRating: 3,
     });
   });
 

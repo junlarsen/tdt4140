@@ -2,11 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { showNotification } from "@mantine/notifications";
-import {
-  useCreateBookMutation,
-  useFetchRatingsMutation,
-  useListBooksQuery,
-} from "../../client.js";
+import { useCreateBookMutation, useListBooksQuery } from "../../client.js";
 import { createBookSchema } from "@gruppe-20/backend";
 import {
   Flex,
@@ -20,6 +16,7 @@ import {
   Modal,
   Table,
   Group,
+  NumberInput,
 } from "@mantine/core";
 import { ErrorMessage } from "@hookform/error-message";
 import { useListGenresQuery, useListAuthorsQuery } from "../../client.js";
@@ -68,6 +65,14 @@ const columns = [
     header: () => <Text>Bilde URL</Text>,
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor("averageRating", {
+    header: () => <Text>IBDB Rating</Text>,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("newspapers_rating", {
+    header: () => <Text>Avisanmeldelser Rating</Text>,
+    cell: (info) => info.getValue(),
+  }),
   columnHelper.accessor("goodreads_rating", {
     header: () => <Text>GoodReads Rating</Text>,
     cell: (info) => info.getValue(),
@@ -86,24 +91,6 @@ export const AdminBooks = () => {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-  const { mutate, isSuccess } = useFetchRatingsMutation();
-  useEffect(() => {
-    if (isSuccess) {
-      showNotification({
-        title: "Suksess",
-        message: `Alle anmeldelser fra GoodReads har blitt importert`,
-        color: "blue",
-      });
-    }
-  }, [isSuccess]);
-  const onFetchRatingsClick = () => {
-    mutate();
-    showNotification({
-      title: "Henter data",
-      message: `Henter bokdata fra GoodReads`,
-      color: "blue",
-    });
-  };
 
   return (
     <Flex direction="column" rowGap="md">
@@ -112,12 +99,10 @@ export const AdminBooks = () => {
         Her får du en oversikt over eksisterende bøker, og muligheten til å
         legge til nye
       </Text>
-      <Group>
-        <Button onClick={() => setPopupVisible(true)}>Opprett ny</Button>
-        <Button onClick={() => onFetchRatingsClick()} variant="outline">
-          Oppdater GoodReads ratings
-        </Button>
-      </Group>
+      <Button onClick={() => setPopupVisible(true)}>Opprett ny</Button>
+      {/*<Button onClick={() => onFetchRatingsClick()} variant="outline">*/}
+      {/*  Oppdater GoodReads ratings*/}
+      {/*</Button>*/}
       {isPopupVisible && (
         <AdminBooksPopup onClose={() => setPopupVisible(false)} />
       )}
@@ -200,7 +185,7 @@ const AdminBooksPopup = ({ onClose }) => {
       });
       onClose();
     }
-  }, [isSuccess, showNotification]);
+  }, [isSuccess, onClose]);
 
   useEffect(() => {
     if (isError) {
@@ -210,7 +195,7 @@ const AdminBooksPopup = ({ onClose }) => {
         color: "red",
       });
     }
-  }, [isError, error, showNotification]);
+  }, [isError, error]);
 
   return (
     <Modal opened title="Oprett ny bok" onClose={onClose}>
@@ -244,6 +229,28 @@ const AdminBooksPopup = ({ onClose }) => {
               error={
                 errors.description && (
                   <ErrorMessage errors={errors} name="description" />
+                )
+              }
+            />
+            <NumberInput
+              {...register("newspapers_rating", {
+                valueAsNumber: true,
+              })}
+              placeholder="avisanmeldelser rating"
+              error={
+                errors.newspapers_rating && (
+                  <ErrorMessage errors={errors} name="newspapers_rating" />
+                )
+              }
+            />
+            <NumberInput
+              {...register("goodreads_rating", {
+                valueAsNumber: true,
+              })}
+              placeholder="goodreads rating"
+              error={
+                errors.goodreads_rating && (
+                  <ErrorMessage errors={errors} name="goodreads_rating" />
                 )
               }
             />

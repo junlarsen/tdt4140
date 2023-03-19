@@ -12,6 +12,7 @@ export const bookSchema = z.object({
   genres: z.array(genreSchema).min(1),
   goodreads_rating: z.number().min(0).max(5),
   goodreads_url: z.string().url().nullable(),
+  newspapers_rating: z.number().min(0).max(5),
   averageRating: z.number().min(0).max(5).nullable(), // computed
   ratingCount: z.number(), // computed
 });
@@ -23,7 +24,6 @@ export const createBookSchema = bookSchema
     genres: true,
     averageRating: true,
     ratingCount: true,
-    goodreads_rating: true,
   })
   .extend({
     authors: z.number().array().min(1),

@@ -57,6 +57,8 @@ describe("book controller", () => {
         genres: [genre.id],
         authors: [author.id],
         goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+        newspapers_rating: 4.3,
+        goodreads_rating: 3.84,
       });
     expect(added.status).toEqual(201);
     expect(added.body).toStrictEqual({
@@ -68,9 +70,10 @@ describe("book controller", () => {
       authors: [{ id: 1, name: "Horror" }],
       genres: [{ id: 1, name: "J.K. Rowling" }],
       goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
-      goodreads_rating: 0,
+      goodreads_rating: 3.84,
       averageRating: null,
       ratingCount: 0,
+      newspapers_rating: 4.3,
     });
   });
 
@@ -86,6 +89,8 @@ describe("book controller", () => {
         genres: [genre.id],
         authors: [],
         goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+        goodreads_rating: 3.84,
+        newspapers_rating: 4.3,
       });
     expect(noAuthor.status).toEqual(400);
     const noGenre = await request(app)
@@ -99,6 +104,8 @@ describe("book controller", () => {
         genres: [],
         authors: [author.id],
         goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+        goodreadsRating: 3.84,
+        newspapers_rating: 4.3,
       });
     expect(noGenre.status).toEqual(400);
   });
@@ -115,6 +122,8 @@ describe("book controller", () => {
       genres: [genre.id],
       authors: [author.id],
       goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+      goodreadsRating: 3.84,
+      newspapersRating: 4.3,
     });
     const filled = await request(app).get("/api/books/");
     expect(filled.status).toEqual(200);
@@ -130,6 +139,8 @@ describe("book controller", () => {
       genres: [genre.id],
       authors: [author.id],
       goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+      goodreadsRating: 3.84,
+      newspapersRating: 4.3,
     });
     const book = await bookService.create({
       title: "Harry Potter 2",
@@ -139,6 +150,8 @@ describe("book controller", () => {
       genres: [genre.id],
       authors: [author.id],
       goodreads_url: "https://www.goodreads.com/book/show/7670800-clementine",
+      goodreadsRating: 3.84,
+      newspapersRating: 4.3,
     });
     const newest = await request(app).get("/api/books/most-recent/");
     expect(newest.body[0]).toHaveProperty("id", book.id);

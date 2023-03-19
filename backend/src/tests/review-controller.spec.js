@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ReviewController } from "../review-controller";
 import { ReviewService } from "../review-service";
-import { adminOnly, withAuth } from "../middleware.js";
+import { withAuth } from "../middleware.js";
 import { createMockDatabase } from "../sqlite";
 import express from "express";
 import request from "supertest";
@@ -46,6 +46,8 @@ describe("review contoller", () => {
       genres: [genre.id],
       description: "A book about ponies",
       image: null,
+      newspapersRating: 4.3,
+      goodreadsRating: 3,
     });
     app = express();
     app.use(express.json());

@@ -17,6 +17,7 @@ import {
   Text,
   Textarea,
   Title,
+  Badge,
 } from "@mantine/core";
 import {
   createColumnHelper,
@@ -72,41 +73,51 @@ export const Book = () => {
                 skrevet av{" "}
                 {book.authors.map((author) => author.name).join(", ")}.
               </Text>
-              <Group>
-                {book.averageRating === null ? (
-                  "Ingen av våre brukere har anmeldt denne boka enda."
-                ) : (
-                  <>
-                    Våre brukere har gitt en gjennomsnittlig anmeldelse på{" "}
-                    <Flex>
-                      <Rating
-                        defaultValue={book.averageRating}
-                        fractions={10}
-                        readOnly
-                      />
-                      <span>({book.averageRating?.toFixed(2)})</span>
-                    </Flex>
-                  </>
-                )}
-                {book.goodreads_rating !== 0 && (
-                  <>
-                    På GoodReads har denne boka en gjennomsnittlig anmeldelse på{" "}
-                    <Flex>
-                      <Rating
-                        defaultValue={book.goodreads_rating}
-                        fractions={10}
-                        readOnly
-                      />
-                      <span>({book.goodreads_rating?.toFixed(2)})</span>
-                    </Flex>
-                  </>
-                )}
-              </Group>
+              <Title order={3}>Vurderinger</Title>
+              <Text>
+                Her er en oversikt over vurdering er som er gitt av diverse
+                kilder.
+              </Text>
               <List>
                 <List.Item>
-                  Sjangere: {book.genres.map((genre) => genre.name).join(", ")}
+                  <Group>
+                    IBDB Brukere:
+                    <Rating
+                      defaultValue={book.averageRating}
+                      fractions={10}
+                      readOnly
+                    />
+                    <span>({(book.averageRating ?? 0).toFixed(2)})</span>
+                  </Group>
+                </List.Item>
+                <List.Item>
+                  <Group>
+                    GoodReads Brukere:
+                    <Rating
+                      defaultValue={book.goodreads_rating}
+                      fractions={10}
+                      readOnly
+                    />
+                    <span>({book.goodreads_rating?.toFixed(2)})</span>
+                  </Group>
+                </List.Item>
+                <List.Item>
+                  <Group>
+                    Avisanmeldelser:
+                    <Rating
+                      defaultValue={book.newspapers_rating}
+                      fractions={10}
+                      readOnly
+                    />
+                    <span>({book.newspapers_rating.toFixed(2)})</span>
+                  </Group>
                 </List.Item>
               </List>
+              <Group>
+                {book.genres.map((genre) => (
+                  <Badge key={genre.name}>{genre.name}</Badge>
+                ))}
+              </Group>
               <Text size="sm" color="dimmed">
                 {book.description ||
                   "Ingen beskrivelse oppgitt for denne boka."}
@@ -163,7 +174,7 @@ const BookReviewComment = ({ bookId }) => {
         color: "blue",
       });
     }
-  }, [isSuccess, showNotification]);
+  }, [isSuccess]);
 
   useEffect(() => {
     if (isError) {

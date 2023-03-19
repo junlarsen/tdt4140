@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useCreateReviewMutation,
+  useDeleteReviewMutation,
   useListBooksQuery,
   useListReviewsQuery,
 } from "../client.js";
@@ -28,13 +29,14 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createReviewSchema } from "@gruppe-20/backend";
 import { ErrorMessage } from "@hookform/error-message";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { showNotification } from "@mantine/notifications";
 import { useSession } from "../auth.js";
 
 export const Book = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const session = useSession();
   const bookPathParameter = params.book;
   const { data: books = [], isLoading: isBooksLoading } = useListBooksQuery();
   const { data: allReviews = [], isLoading: isReviewsLoading } =
@@ -43,7 +45,6 @@ export const Book = () => {
   const book =
     books.find((book) => book.id === Number(bookPathParameter)) ?? null;
   const reviews = allReviews.filter((review) => review.book_id === book.id);
-  const session = useSession();
   const isLoggedIn = session !== null;
   const isAbleToSubmitReview =
     isLoggedIn && !reviews.some((review) => review.user_id === session.user.id);
@@ -210,6 +211,8 @@ const BookReviewComment = ({ bookId }) => {
 
 const BookReviewTable = ({ reviews }) => {
   const session = useSession();
+  const { isSuccess, mutate } = useDeleteReviewMutation();
+  const isAdmin = useMemo(() => session?.user?.user_role === "a", [session]);
   const columnHelper = createColumnHelper();
   const columns = [
     columnHelper.accessor("username", {
@@ -225,6 +228,33 @@ const BookReviewTable = ({ reviews }) => {
       ),
     }),
   ];
+  if (isAdmin) {
+    columns.push(
+      columnHelper.accessor((row) => row, {
+        id: "delete",
+        header: () => <Text>Slett</Text>,
+        cell: (info) => {
+          const row = info.getValue();
+          const onClick = () =>
+            mutate({ user_id: row.user_id, book_id: row.book_id });
+          return (
+            <Button variant="outline" onClick={onClick}>
+              Slett kommentar
+            </Button>
+          );
+        },
+      }),
+    );
+  }
+  useEffect(() => {
+    if (isSuccess) {
+      showNotification({
+        title: "Suksess",
+        message: `Kommentaren har blitt slettet`,
+        color: "blue",
+      });
+    }
+  }, [isSuccess]);
   const table = useReactTable({
     columns,
     data: reviews,

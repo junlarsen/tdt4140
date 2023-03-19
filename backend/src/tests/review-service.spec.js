@@ -96,4 +96,21 @@ describe("review service", () => {
     const highest = await bookService.getHighestRatedBooks();
     expect(highest[0]).toHaveProperty("averageRating", 4);
   });
+
+  it("can delete reviews", async () => {
+    const review = await reviewService.create({
+      userId: 1,
+      bookId: 1,
+      rating: 4,
+      comment: "This book was a nice read",
+    });
+    const all = await reviewService.list();
+    expect(all).toContainEqual(review);
+    await reviewService.delete({
+      userId: review.user_id,
+      bookId: review.book_id,
+    });
+    const all2 = await reviewService.list();
+    expect(all2).not.toContainEqual(review);
+  });
 });

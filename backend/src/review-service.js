@@ -44,4 +44,14 @@ export class ReviewService {
 
     return this.find(review.user_id, review.book_id);
   }
+
+  async delete({ userId, bookId }) {
+    await this.#database.get(
+      "DELETE FROM reviews WHERE book_id = $bookId AND user_id = $userId",
+      {
+        $bookId: bookId,
+        $userId: userId,
+      },
+    );
+  }
 }

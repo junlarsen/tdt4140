@@ -1,4 +1,8 @@
-import { createReviewSchema, reviewSchema } from "./review.js";
+import {
+  createReviewSchema,
+  deleteReviewSchema,
+  reviewSchema,
+} from "./review.js";
 
 export class ReviewController {
   #reviewService;
@@ -27,5 +31,17 @@ export class ReviewController {
     } catch (err) {
       return res.sendStatus(500);
     }
+  }
+
+  async delete(req, res) {
+    const form = deleteReviewSchema.safeParse(req.body);
+    if (!form.success) {
+      return res.sendStatus(400);
+    }
+    await this.#reviewService.delete({
+      userId: form.data.user_id,
+      bookId: form.data.book_id,
+    });
+    return res.sendStatus(204);
   }
 }

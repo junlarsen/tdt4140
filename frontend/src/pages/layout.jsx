@@ -17,6 +17,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useLogout, useSession } from "../auth.js";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const Logo = () => {
   const navigate = useNavigate();
@@ -196,26 +197,42 @@ const User = () => {
 };
 
 export const Layout = () => {
+  const [isAdShown, setAdShown] = useState(true);
   return (
-    <AppShell
-      padding="md"
-      navbar={
-        <Navbar p="xs" width={{ base: 400 }}>
-          <Navbar.Section grow mt="md">
-            <Links />
-          </Navbar.Section>
-          <Navbar.Section>
-            <Text color="dimmed">Annonsørinnhold</Text>
-            <Image src="/kiwi.png" height={900} radius="md" fit="revert" />
-          </Navbar.Section>
-          <Navbar.Section>
-            <User />
-          </Navbar.Section>
-        </Navbar>
-      }
-      header={<Logo />}
-    >
-      <Outlet />
-    </AppShell>
+    <>
+      {isAdShown && (
+        <div
+          onClick={() => setAdShown(false)}
+          style={{
+            position: "fixed",
+            cursor: "pointer",
+            opacity: 0.8,
+            bottom: 0,
+            left: "50%",
+            marginLeft: -300,
+            zIndex: 500,
+          }}
+        >
+          <Text color="dimmed">Annonsørinnhold &times;</Text>
+          <Image src="/image.png" radius="lg" width={600} />
+        </div>
+      )}
+      <AppShell
+        padding="md"
+        navbar={
+          <Navbar p="xs" width={{ base: 400 }}>
+            <Navbar.Section grow mt="md">
+              <Links />
+            </Navbar.Section>
+            <Navbar.Section>
+              <User />
+            </Navbar.Section>
+          </Navbar>
+        }
+        header={<Logo />}
+      >
+        <Outlet />
+      </AppShell>
+    </>
   );
 };

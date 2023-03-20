@@ -11,14 +11,17 @@ import {
 } from "@gruppe-20/backend";
 import { useSession } from "./auth.js";
 
-const baseUrl = "http://localhost:3001";
+const baseUrl =
+  window.location.hostname === "tdt4140-20.idi.ntnu.no"
+    ? "http://tdt4140-20.idi.ntnu.no/web-api/"
+    : "http://localhost:3001/api";
 
 export const useRegistrationMutation = () =>
   useMutation({
     mutationFn: async (data) => {
       createUserSchema.parse(data);
       const response = await axios({
-        url: `${baseUrl}/api/users/`,
+        url: `${baseUrl}/users/`,
         method: "POST",
         data,
         headers: {
@@ -34,7 +37,7 @@ export const useLoginMutation = () =>
     mutationFn: async (data) => {
       loginUserSchema.parse(data);
       const response = await axios({
-        url: `${baseUrl}/api/users/login/`,
+        url: `${baseUrl}/users/login/`,
         method: "POST",
         data,
         headers: {
@@ -50,7 +53,7 @@ export const useListGenresQuery = () =>
     queryKey: ["genres"],
     queryFn: async () => {
       const response = await axios({
-        url: `${baseUrl}/api/genres/`,
+        url: `${baseUrl}/genres/`,
         method: "GET",
       });
       return response.data;
@@ -64,7 +67,7 @@ export const useCreateGenreMutation = () => {
     mutationFn: async (data) => {
       createGenreSchema.parse(data);
       const response = await axios({
-        url: `${baseUrl}/api/genres/`,
+        url: `${baseUrl}/genres/`,
         method: "POST",
         data,
         headers: {
@@ -85,7 +88,7 @@ export const useListAuthorsQuery = () =>
     queryKey: ["authors"],
     queryFn: async () => {
       const response = await axios({
-        url: `${baseUrl}/api/authors/`,
+        url: `${baseUrl}/authors/`,
         method: "GET",
       });
       return response.data;
@@ -99,7 +102,7 @@ export const useCreateAuthorMutation = () => {
     mutationFn: async (data) => {
       createAuthorSchema.parse(data);
       const response = await axios({
-        url: `${baseUrl}/api/authors/`,
+        url: `${baseUrl}/authors/`,
         method: "POST",
         data,
         headers: {
@@ -120,7 +123,7 @@ export const useListBooksQuery = () =>
     queryKey: ["books"],
     queryFn: async () => {
       const response = await axios({
-        url: `${baseUrl}/api/books/`,
+        url: `${baseUrl}/books/`,
         method: "GET",
       });
       return response.data;
@@ -132,7 +135,7 @@ export const useListHighestRatedBooksQuery = () =>
     queryKey: ["books-rated"],
     queryFn: async () => {
       const response = await axios({
-        url: `${baseUrl}/api/books/highest-rated/`,
+        url: `${baseUrl}/books/highest-rated/`,
         method: "GET",
       });
       return response.data;
@@ -144,7 +147,7 @@ export const useListMostRecentBooksQuery = () =>
     queryKey: ["books-recent"],
     queryFn: async () => {
       const response = await axios({
-        url: `${baseUrl}/api/books/most-recent/`,
+        url: `${baseUrl}/books/most-recent/`,
         method: "GET",
       });
       return response.data;
@@ -158,7 +161,7 @@ export const useCreateBookMutation = () => {
     mutationFn: async (data) => {
       createBookSchema.parse(data);
       const response = await axios({
-        url: `${baseUrl}/api/books/`,
+        url: `${baseUrl}/books/`,
         method: "POST",
         data,
         headers: {
@@ -182,7 +185,7 @@ export const useFetchRatingsMutation = () => {
   return useMutation({
     mutationFn: async () => {
       await axios({
-        url: `${baseUrl}/api/books/fetch-ratings`,
+        url: `${baseUrl}/books/fetch-ratings`,
         method: "POST",
         headers: {
           authorization: `Token ${session?.authToken}`,
@@ -200,7 +203,7 @@ export const useListReviewsQuery = () =>
     queryKey: ["reviews"],
     queryFn: async () => {
       const response = await axios({
-        url: `${baseUrl}/api/reviews/`,
+        url: `${baseUrl}/reviews/`,
         method: "GET",
       });
       return response.data;
@@ -214,7 +217,7 @@ export const useCreateReviewMutation = () => {
     mutationFn: async (data) => {
       createReviewSchema.parse(data);
       const response = await axios({
-        url: `${baseUrl}/api/reviews/`,
+        url: `${baseUrl}/reviews/`,
         method: "POST",
         data,
         headers: {
@@ -238,7 +241,7 @@ export const useDeleteReviewMutation = () => {
     mutationFn: async (data) => {
       deleteReviewSchema.parse(data);
       const response = await axios({
-        url: `${baseUrl}/api/reviews/`,
+        url: `${baseUrl}/reviews/`,
         method: "DELETE",
         data,
         headers: {

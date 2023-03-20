@@ -6,6 +6,7 @@ import {
   Grid,
   Loader,
   MultiSelect,
+  NumberInput,
   Text,
   TextInput,
   Title,
@@ -102,13 +103,19 @@ export const Search = () => {
             label="Forfatter / Tittel"
             placeholder="J. K. Rowling"
           />
-          <TextInput
-            {...register("releaseYear", {
-              valueAsNumber: true,
-            })}
-            label="Foo"
-            placeholder="1999"
-            type="number"
+          <Controller
+            control={control}
+            name="releaseYear"
+            render={({ field }) => (
+              <NumberInput
+                label="Utgivelsesår"
+                valu={field.value}
+                onChange={(value) => field.onChange(value)}
+                ref={field.ref}
+                placeholder="1999"
+                type="number"
+              />
+            )}
           />
           <Controller
             control={control}

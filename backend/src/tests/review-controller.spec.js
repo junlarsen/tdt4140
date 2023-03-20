@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ReviewController } from "../review-controller";
 import { ReviewService } from "../review-service";
-import { withAuth } from "../middleware.js";
+import { adminOnly, withAuth } from "../middleware.js";
 import { createMockDatabase } from "../sqlite";
 import express from "express";
 import request from "supertest";

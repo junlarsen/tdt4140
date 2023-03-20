@@ -1,4 +1,4 @@
-import { Grid, Loader, Title } from "@mantine/core";
+import { Flex, Grid, Loader, Title } from "@mantine/core";
 import { BookCard } from "../components/book-card.jsx";
 import {
   useListHighestRatedBooksQuery,
@@ -14,16 +14,16 @@ export const Home = () => {
     useListMostRecentBooksQuery();
   const isLoading = isHighestRatedBooksLoading || isMostRecentBooksLoading;
   return (
-    <div>
+    <Flex direction="column" gap="md">
       {isLoading ? (
         <Loader />
       ) : (
         <>
           <div>
-            <div>
-              <Title order={2}>De beste bøkene</Title>
-            </div>
-            <Grid columns={4}>
+            <Title order={2}>
+              Topplista - de beste og mest anmeldte bøkene på markedet!
+            </Title>
+            <Grid columns={6}>
               {highestRatedBooks.map((book) => (
                 <Grid.Col span={1} key={book.id}>
                   <BookCard book={book} />
@@ -32,10 +32,10 @@ export const Home = () => {
             </Grid>
           </div>
           <div>
-            <div>
-              <Title order={2}>De nyeste bøkene</Title>
-            </div>
-            <Grid columns={4}>
+            <Title order={2}>
+              Up & coming - de nyeste bøkene av de beste forfatterene
+            </Title>
+            <Grid columns={6}>
               {mostRecentBooks.map((book) => (
                 <Grid.Col span={1} key={book.id}>
                   <BookCard book={book} />
@@ -45,6 +45,6 @@ export const Home = () => {
           </div>
         </>
       )}
-    </div>
+    </Flex>
   );
 };

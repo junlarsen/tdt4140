@@ -48,6 +48,7 @@ const Logo = () => {
           <form onSubmit={handleSubmit(onSearchNavigate)}>
             <Flex columnGap="xs">
               <Input
+                id="search-input-hack-dont-do-this-please"
                 sx={{ width: 300 }}
                 placeholder="Søk etter bok eller forfatter"
                 {...register("query", {
@@ -80,12 +81,6 @@ const Links = () => {
   if (session !== null) {
     if (session.user.user_role === "a") {
       links.push(
-        // {
-        //   icon: "mdi:file-document-remove",
-        //   href: "/admin/remove-reviews",
-        //   label: "Fjern anmeldelser",
-        //   color: theme.colors.teal[4],
-        // },
         {
           icon: "mdi:book-plus",
           href: "/admin/books",

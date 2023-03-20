@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { BookCard } from "../components/book-card.jsx";
 import { Controller, useForm } from "react-hook-form";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 export const Search = () => {
   const [params] = useSearchParams();
@@ -22,13 +22,29 @@ export const Search = () => {
   const isLoading = isBooksLoading || isGenresLoading;
 
   const queryFromParameters = params.get("q");
-  const { control, register, watch } = useForm({
+  const { control, register, watch, setValue } = useForm({
     defaultValues: {
       releaseYear: null,
       genres: [],
       text: queryFromParameters ?? "",
     },
   });
+
+  // FYI: This is very terrible practice but we're just shipping a toy product
+  // so I couldn't care less <3
+  useEffect(() => {
+    const input = document.getElementById(
+      "search-input-hack-dont-do-this-please",
+    );
+    if (!input) {
+      return;
+    }
+    const listener = () => {
+      setValue("text", input.value);
+    };
+    input.addEventListener("input", listener);
+    return () => input.removeEventListener("input", listener);
+  }, [setValue]);
 
   const textQuery = watch("text");
   const releaseYearQuery = watch("releaseYear");
@@ -41,12 +57,13 @@ export const Search = () => {
           !textQuery ||
           book.authors.some(
             (author) =>
-              regexp.test(author.name) || author.name.includes(textQuery),
+              regexp.test(author.name) ||
+              author.name.toLowerCase().includes(textQuery.toLowerCase()),
           );
         const isMatchingBook =
           !textQuery ||
           regexp.test(book.title) ||
-          book.title.includes(textQuery);
+          book.title.toLowerCase().includes(textQuery.toLowerCase());
 
         const isMatchingYear =
           !releaseYearQuery || book.release_year === releaseYearQuery;
@@ -72,6 +89,10 @@ export const Search = () => {
   return (
     <Flex direction="column" gap="md">
       <Title>Boksøk</Title>
+      <Text>
+        Dette er en fleksibel søkeside som lar deg søke etter bøker, forfattere,
+        utgivelsesår og sjangere.
+      </Text>
       <Text>Dette er en liste over bøkene som matchet søket ditt.</Text>
 
       <form>
@@ -111,7 +132,7 @@ export const Search = () => {
       ) : (
         <div>
           {matches.length !== 0 ? (
-            <Grid columns={4}>
+            <Grid columns={6}>
               {matches.map((book) => (
                 <Grid.Col key={book.id} span={1}>
                   <BookCard book={book} />

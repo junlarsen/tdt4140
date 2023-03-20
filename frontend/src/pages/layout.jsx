@@ -11,6 +11,7 @@ import {
   useMantineTheme,
   useMantineColorScheme,
   NavLink,
+  Image,
 } from "@mantine/core";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
@@ -28,13 +29,18 @@ const Logo = () => {
   return (
     <Header height={60}>
       <Group sx={{ height: "100%" }} px={20} position="apart">
-        <Flex align="center" columnGap="sm">
+        <Flex
+          align="center"
+          columnGap="sm"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
           <Icon
             icon="material-symbols:menu-book-outline-sharp"
             width={40}
             height={40}
           />
-          <Text fw={800} fs="xl">
+          <Text component="p" fw={800} fs="xl" style={{ userSelect: "none" }}>
             IBDB
           </Text>
         </Flex>
@@ -197,6 +203,10 @@ export const Layout = () => {
         <Navbar p="xs" width={{ base: 400 }}>
           <Navbar.Section grow mt="md">
             <Links />
+          </Navbar.Section>
+          <Navbar.Section>
+            <Text color="dimmed">Annonsørinnhold</Text>
+            <Image src="/kiwi.png" height={900} radius="md" fit="revert" />
           </Navbar.Section>
           <Navbar.Section>
             <User />

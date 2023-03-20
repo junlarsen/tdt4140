@@ -1,4 +1,4 @@
-import { Flex, Grid, Loader, Title } from "@mantine/core";
+import { Box, Flex, Grid, Group, Image, Loader, Title } from "@mantine/core";
 import { BookCard } from "../components/book-card.jsx";
 import {
   useListHighestRatedBooksQuery,
@@ -14,11 +14,11 @@ export const Home = () => {
     useListMostRecentBooksQuery();
   const isLoading = isHighestRatedBooksLoading || isMostRecentBooksLoading;
   return (
-    <Flex direction="column" gap="md">
+    <div>
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <Flex direction="column" gap="md">
           <div>
             <Title order={2}>
               Topplista - de beste og mest anmeldte bøkene på markedet!
@@ -43,8 +43,8 @@ export const Home = () => {
               ))}
             </Grid>
           </div>
-        </>
+        </Flex>
       )}
-    </Flex>
+    </div>
   );
 };

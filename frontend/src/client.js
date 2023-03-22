@@ -12,8 +12,8 @@ import {
 import { useSession } from "./auth.js";
 
 const baseUrl =
-  window.location.hostname === "tdt4140-20.idi.ntnu.no"
-    ? "http://tdt4140-20.idi.ntnu.no/web-api/"
+  window.location.hostname === "tdt4140-20.jun.codes"
+    ? "http://tdt4140-20.jun.codes/web-api/"
     : "http://localhost:3001/api";
 
 export const useRegistrationMutation = () =>

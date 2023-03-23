@@ -15,12 +15,12 @@ export class BookService {
 
   async getHighestRatedBooks() {
     const all = await this.list();
-    return all.sort((x, y) => y.averageRating - x.averageRating).slice(0, 8);
+    return all.sort((x, y) => y.averageRating - x.averageRating).slice(0, 12);
   }
 
   async getMostRecentBooks() {
     const all = await this.list();
-    return all.sort((x, y) => y.release_year - x.release_year).slice(0, 8);
+    return all.sort((x, y) => y.release_year - x.release_year).slice(0, 12);
   }
 
   async getAverageRating(id) {
